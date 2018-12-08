@@ -57,12 +57,12 @@ function postMeta(post, $) {
     // Mensaje
     let html = post.find('blockquote').first().html();
     // Convertir HTML a BBCode de Hispa
-    html = html.replace(/<div class="code(.*?)">(.*?)<\/div>/gmi, "[code]$2[/code]"); // [code]
-    html = html.replace(/<b(.*?)>(.*?)<\/b>/gmi, "[b]$2[/b]"); // [b]
-	html = html.replace(/<i(.*?)>(.*?)<\/i>/gmi, "[i]$2[/i]"); // [i]
-    html = html.replace(/<span style="border-bottom(.*?)">(.*?)<\/b>/gmi, "[u]$2[/u]"); // [u] (que mierda zeta?)
-    html = html.replace(/<strike(.*?)>(.*?)<\/strike>/gmi, "[s]$2[/s]"); // [s]
-    html = html.replace(/<span class="spoiler(.*?)">(.*?)<\/spoiler>/gmi, "[spoiler]$2[/spoiler]"); // [spoiler]
+    html = html.replace(/<div class="code([^"]*)">([\s\S]*?)<\/div>/gmi, "[code]$2[/code]"); // [code]
+    html = html.replace(/<b([^r>]*)>([\s\S]*?)<\/b>/gmi, "[b]$2[/b]"); // [b] evitando <br>
+    html = html.replace(/<i([^>]*)>([\s\S]*?)<\/i>/gmi, "[i]$2[/i]"); // [i]
+    html = html.replace(/<span style="border-bottom([^"]+)">([\s\S]*?)<\/span>/gmi, "[u]$2[/u]"); // [u] (que mierda zeta?)
+    html = html.replace(/<strike([^>]*)>([\s\S]*?)<\/strike>/gmi, "[s]$2[/s]"); // [s]
+    html = html.replace(/<span[^>]+class="spoiler(.*?)"[^>]*>([\s\S]*?)<\/span>/gmi, "[spoiler]$2[/spoiler]"); // [spoiler]
     html = html.replace(/<a id="embed(.*?)">(.*?)<\/a>/gmi, ""); // [Reproducir]
     post.find('blockquote').first().html(html); 
     post.find('.abbrev').first().remove();
