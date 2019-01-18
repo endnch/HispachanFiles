@@ -41,8 +41,10 @@ blockquote {
     background-color: #424242;
     border-radius: 2px;
     a, a:link, a:visited, a:active, span { text-decoration: none; color: #424242!important; }
-    a:hover, &:hover span { text-decoration: none; color: white !important; }
+    // a:hover, &:hover span { text-decoration: none; color: white !important; }
 }
+
+.spoiler:hover { text-decoration: none; color: white !important; }
 
 .extrabtns {
     vertical-align: middle;

@@ -30,6 +30,18 @@ npm start
 
 Listo, ahora tienes tu propio HispaFiles de uso personal <s>para guardar tus cepillos</s>.
 
+### Modificando el código
+
+También se puede usar Gulp para actualizar cambios en el código fácilmente. Para instalarlo se deben ejecutar los siguientes comandos:
+```
+npm install gulp-cli -g
+npm install gulp -D
+```
+Despues de modificar algo en el código se debe ejecutar lo siguiente en la carpeta raíz de HispachanFiles:
+```
+gulp build
+```
+
 ## Cosas por hacer
 
 Esta nueva versión de HispaFiles está hecha completamente desde cero, así que aún hay un par de cosas que hacen falta. Esto es lo que se me ocurre de momento:
