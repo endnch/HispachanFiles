@@ -43,11 +43,13 @@ router.get('/search', (req, res) => {
     res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
 
     let q = req.query.q;
+    let board = req.query.board;
     let p = parseInt(req.query.p || 1);
     let pages = [];
     let totalPages = 0;
+    let query;
     // Página en blanco si no hay query
-    if (!q) {
+    if (!q && !board) {
         res.render('search-results', {
             title: `Resultados de búsqueda: ${q} - ${publicSettings.site.title}`,
             settings: publicSettings,
@@ -55,7 +57,19 @@ router.get('/search', (req, res) => {
         });
         return;
     }
-    let query = { $or: [{ subject: { $regex: q, $options: 'i' } }, { message: { $regex: q, $options: 'i' } }] };
+
+    if (!q && board) {
+        query = { board: board };
+    }
+
+    if (q && !board) {
+        query = { $or: [{ subject: { $regex: q, $options: 'i' } }, { message: { $regex: q, $options: 'i' } }] };
+    }
+
+    if (q && board) {
+        query = { $and: [{ $or: [{ subject: { $regex: q, $options: 'i' } }, { message: { $regex: q, $options: 'i' } }] }, { board: board }] };
+    }
+    
     async.waterfall([
         // Contar los resultados
         cb => Thread.count(query, cb),
