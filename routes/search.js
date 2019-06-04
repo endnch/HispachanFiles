@@ -115,4 +115,59 @@ router.get('/search', (req, res) => {
     });
 });
 
+// Todos los hilos
+router.get('/all', (req, res) => {
+    // CloudFlare server push
+    res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
+
+    let p = parseInt(req.query.p || 1);
+    let pages = [];
+    let totalPages = 0;
+    let query = {};
+
+    async.waterfall([
+        // Contar los resultados
+        cb => Thread.count(query, cb),
+        (num, cb) => {
+            totalPages = Math.floor(num / 10) + 1;
+            // Generar paginado (perdón por esta cagada de código, debería ir en la view, pero lo arreglo despues)
+            if (totalPages > 1) {
+                // Primera página
+                pages.push({ type: 'page', num: 1, active: p == 1 });
+                // Crear un rango de páginas
+                let rangeStart = (p - 5 > 0) ? (p - 4) : 2;
+                let rangeEnd = (p + 5 < totalPages) ? (p + 4) : totalPages - 1;
+                // Poner un divisor a partir de la página 5
+                if (rangeStart > 2) pages.push({ type: 'divider' });
+                // Añadir botones para cada página
+                for (let i = rangeStart; i <= rangeEnd; i++)
+                {
+                    pages.push({ type: 'page', num: i, active: p == i });
+                }
+                // Poner un divisor 10+ páginas antes del final
+                if (rangeEnd < totalPages - 1) pages.push({ type: 'divider' });
+                // Última página
+                pages.push({ type: 'page', num: totalPages, active: p == totalPages });
+            }
+            cb();
+        },
+        cb => Thread.find(query).skip((p - 1) * 10).limit(10).exec(cb),
+    ], (err, result) => {
+        if (err) {
+            res.render('all-threads', {
+                title: `Todos los hilos - ${publicSettings.site.title}`,
+                settings: publicSettings,
+                totalPages: 1, items: [], pages: []
+            });
+        }
+        else {
+            res.render('all-threads', {
+                title: `Todos los hilos - ${publicSettings.site.title}`,
+                settings: publicSettings,
+                totalPages: totalPages, items: result, pages: pages
+            });
+        }
+    });
+});
+
 module.exports = router;
