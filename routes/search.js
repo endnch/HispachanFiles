@@ -109,7 +109,7 @@ router.get('/search', (req, res) => {
             res.render('search-results', {
                 title: `Resultados de búsqueda ${q} - ${publicSettings.site.title}`,
                 settings: publicSettings,
-                currentQuery: q, totalPages: totalPages, items: result, pages: pages
+                currentQuery: q, currentBoard: board, totalPages: totalPages, items: result, pages: pages
             });
         }
     });

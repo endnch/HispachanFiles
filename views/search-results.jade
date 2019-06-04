@@ -28,6 +28,9 @@ block content
         .ui.pagination.menu
           each page in pages
             if page.type == 'page'
-              a(class=page.active?'item active':'item', href='/search?q='+ encodeURIComponent(currentQuery) +'&p='+page.num) #{page.num}
+              if !currentQuery
+                a(class=page.active?'item active':'item', href='/search?board='+ encodeURIComponent(currentBoard) +'&p='+page.num) #{page.num}
+              else
+                a(class=page.active?'item active':'item', href='/search?q='+ encodeURIComponent(currentQuery) +'&p='+page.num) #{page.num}
             if page.type == 'divider'
               .item.disabled ...
