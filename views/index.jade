@@ -111,6 +111,9 @@ block content
               button.ui.teal.right.labeled.icon.button#copyBtn
                 i.icon.copy
                 | Copiar
+              button.ui.teal.right.icon.button
+                a(:href="archiver.endUrl", target="_blank")
+                  i.icon.external(style="color:#fff;")
        center(v-show="!archiver.done && archiver.hasData") Puedes cerrar esta ventana. El hilo seguirá en la cola de almacenamiento.
     div(v-else)
       .ui.top.attached.pointing.secondary.menu#mainTabs
