@@ -13,7 +13,7 @@ function boardMeta(board, $, page) {
     // Objeto para almacenar los datos
     var data = {};
     // Buscar hilos
-    var threads = board.find('[id^="thread"]');
+    var threads = board.find('div[id^="thread"]');
     data.board = $('input[name="board"]').val();
     data.page = page;
     data.threads = [];
