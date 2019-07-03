@@ -51,6 +51,8 @@ module.exports=
         // De momento, se usa para los links de contacto, pero en un futuro
         // se enviarán automáticamente los reportes de hilos a esta dirección.
         email: 'zeta@pagalacoca.com',
+        // Mínimo número de respuestas para que un hilo sea almacenado
+        minimumReplies: 20,
     }
     
 }

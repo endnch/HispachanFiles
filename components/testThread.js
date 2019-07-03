@@ -1,5 +1,7 @@
 'use strict';
 
+const settings = require('../settings');
+
 /**
  * Decide si un hilo cumple con los requisitos para ser almacenado
  * (Putos moralfags)
@@ -8,7 +10,7 @@
  * @return {String} failReason
  */
 function testThread(thread) {
-    if (thread.replyCount < 20) return 'El hilo tiene pocas respuestas';
+    if (thread.replyCount < settings.misc.minimumReplies) return 'El hilo tiene pocas respuestas';
     return '';
 }
 
