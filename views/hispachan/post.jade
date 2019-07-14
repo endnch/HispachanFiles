@@ -39,7 +39,7 @@ blockquote(style='word-wrap: break-word;')
       b Tu fortuna: #{post.fortuna}
       br
       br
-  | {{{#{JSON.stringify(post.message)} | renderPostMessage}}}
+  | {{{#{JSON.stringify(post.message)} | renderPostMessage #{post.postId}}}}
   br
   br
   //- (TODO: Mostrar los backlinks)

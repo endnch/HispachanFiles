@@ -3,7 +3,7 @@
  */
 'use strict';
 
-export default function renderPostMessage(text)
+export default function renderPostMessage(text, postId)
 {
     // texto rojo (diciembre de 2018)
     // Este reemplazo siempre se tiene que ejecutar antes que los demas para que
@@ -27,6 +27,7 @@ export default function renderPostMessage(text)
         var rP = ref.substr(2);
         if($('[name="'+rP+'"]').length)
         {
+            $(`a[name="${rP}"]`).parent().find('blockquote .replybacklinks').first().append(`<a href="#${postId}">>>${postId}</a>`);
             return `<a href="#${rP}" data-ref="${rP}">${ref}</a>`;
         }
         else
