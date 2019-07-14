@@ -28,6 +28,7 @@ class HispachanFiles {
         let that = this;
         // Clásico
         $(document).ready(() => { that.documentReady() });
+        $(window).load(() => { that.documentLoaded() });
     }
 
     documentReady() {
@@ -86,6 +87,18 @@ class HispachanFiles {
                 NProgress.done();
             }
         });
+    }
+
+    documentLoaded() {
+        // Previews de backlinks
+        $('.backlink').popup({
+            lastResort: 'bottom left',
+            position: 'bottom left',
+            onVisible: function() {
+                this.html($(`#reply${this.prev().attr('href').substr(1)}`).html());
+                this.find(`a[name=${this.prev().attr('href').substr(1)}]`).attr('name', '');
+            }
+        });        
     }
 }
 

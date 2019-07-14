@@ -27,8 +27,11 @@ export default function renderPostMessage(text, postId)
         var rP = ref.substr(2);
         if($('[name="'+rP+'"]').length)
         {
-            $(`a[name="${rP}"]`).parent().find('blockquote .replybacklinks').first().append(`<a href="#${postId}">>>${postId}</a>`);
-            return `<a href="#${rP}" data-ref="${rP}">${ref}</a>`;
+            // Backlinks
+            $(`a[name="${rP}"]`).parent().find('blockquote .replybacklinks').first()
+                .append(`<a class="backlink" href="#${postId}">>>${postId}</a>
+                         <div class="ui flowing popup"><i class="notched circle loading icon"></i></div>`);
+            return `<a class="backlink" href="#${rP}" data-ref="${rP}">${ref}</a><div class="ui flowing popup"><i class="notched circle loading icon"></i></div>`;
         }
         else
         {
