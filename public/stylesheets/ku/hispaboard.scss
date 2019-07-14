@@ -215,3 +215,9 @@ hr
 .replybacklinks a {
 	margin-right:5px;
 }
+
+.ui.popup {
+	background-color:$pb-background;
+	border-color:$pb-background;
+	color:$pb-foreground;
+}
