@@ -92,6 +92,7 @@ class HispachanFiles {
     documentLoaded() {
         // Previews de backlinks
         $('.backlink').popup({
+            duration: 0,
             variation: 'basic small',
             lastResort: 'bottom left',
             position: 'bottom left',
