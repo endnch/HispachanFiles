@@ -63,6 +63,7 @@ a
 
 table {
     margin: 4px;
+    border-collapse: separate;
 }
 
 .postblock
@@ -220,4 +221,5 @@ hr
 	background-color:$pb-background;
 	border-color:$pb-border;
 	color:$pb-foreground;
+	border-radius:4px;
 }
