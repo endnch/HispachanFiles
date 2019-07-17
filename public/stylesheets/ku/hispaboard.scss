@@ -223,3 +223,36 @@ hr
 	color:$pb-foreground;
 	border-radius:4px;
 }
+
+#pcscrollTop, #pcscrollBottom {
+    background-color:$pb-background;
+    border:1px solid $pb-border;
+}
+
+#pcscrollTop {
+    position: fixed;
+    width: 22px;
+    height: 18px;
+    padding: 2px 0;
+    margin: 0;
+    top: 53px;
+    right: 8px;
+    cursor: pointer;
+    text-align: center;
+    @include border-radius(4px);
+    z-index: 100;
+}
+
+#pcscrollBottom {
+    position: fixed;
+    width: 22px;
+    height: 18px;
+    padding: 2px 0;
+    margin: 0;
+    top: 81px;
+    right: 8px;
+    cursor: pointer;
+    text-align: center;
+    @include border-radius(4px);
+    z-index: 100;
+}
