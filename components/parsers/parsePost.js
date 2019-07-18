@@ -21,6 +21,31 @@ function postMeta(post, $) {
         data.posterCountryName = bandera.attr("title");
         data.flag = bandera.attr("src");
     }
+
+    // OP
+    if (post.find(".op").length > 0) {
+        data.op = true;
+    }
+
+    // Admin
+    if (post.find('.postername').first().next().hasClass('admin')) {
+        data.admin = true;
+    }
+
+    // Mod
+    if (post.find('.postername').first().next().hasClass('mod')) {
+        data.mod = true;
+    }
+
+    // Cerrado
+    if (post.find('[alt="Cerrado"]').length > 0) {
+        data.locked = true;
+    }
+
+    // Hilo fijado
+    if (post.find('[alt="Hilo fijado"]').length > 0) {
+        data.sticky = true;
+    }
         
     // Fecha y Hora
     let dateRe    = /(\d{1,2})\/(\d{1,2})\/(\d{1,2}) (\d{1,2}):(\d{1,2})/;

@@ -12,6 +12,13 @@ label
     span &nbsp;
     img.bandera(src=post.flag, alt=post.posterCountry, title=post.posterCountryName)
   span.postername= ' ' + post.posterName
+  //- Chapas
+  if post.op
+    span.badge OP
+  if post.admin
+    span.badge Admin
+  if post.mod
+    span.badge Mod
   span.timer(v-cloak, title='Hispachan Files siempre muestra la hora local.') &nbsp; {{'#{post.date}' | moment 'DD/MM/YY HH:MM'}}
 //- kek
 .mvisible.reflinkposition
@@ -22,4 +29,9 @@ span.reflink
   a.reflink2(title='Obtener link a este post', href=settings.site.url+'/'+thread.board+'/res/'+thread.postId+'.html#'+post.postId) /#/&nbsp;
   a.reflinks(title='ID de post')= post.postId
 //- ??
-.extrabtns
+span.extrabtns
+  if post.locked
+    img(src='https://www.hispachan.org/css/locked.gif', alt='Cerrado')
+  if post.sticky
+    img(src='https://www.hispachan.org/css/sticky.gif', alt='Hilo fijado')
+br

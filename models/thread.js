@@ -44,5 +44,12 @@ module.exports = mongoose.model('Thread', {
             name: String,
             thumb: String
         },
-    }]
+        op: Boolean,
+        admin: Boolean,
+        mod: Boolean,
+    }],
+    admin: Boolean,
+    mod: Boolean,
+    locked: Boolean,
+    sticky: Boolean
 });
