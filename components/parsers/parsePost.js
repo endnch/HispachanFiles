@@ -14,7 +14,7 @@ function postMeta(post, $) {
     // Nombre del posteador (en boards con campo de nombre)
     data.posterName = post.find('span.postername').first().contents().filter(function(){ 
       return this.nodeType == 3; 
-    })[0].nodeValue.trim()    
+    })[0].nodeValue.trim();
         
     // Bandera
     if (post.find(".bandera").length > 0) {
