@@ -1,6 +1,4 @@
-<center>
 ![Hispachan Files](public/images/md_banner.png)
-</center>
 
 
 Hispachan Files es una herramienta para guardar hilos de [hispachan.org](https://www.hispachan.org). También ofrece una API no-oficial para el mismo.
@@ -47,10 +45,10 @@ gulp build
 Esta nueva versión de HispaFiles está hecha completamente desde cero, así que aún hay un par de cosas que hacen falta. Esto es lo que se me ocurre de momento:
 
  - [x] Expandir imágenes en la misma página
- - [ ] Expandir WEBMS
+ - [x] Expandir WEBMS
  - [x] Eliminar hilos si no cumplen 2 horas de antigüedad en Hispa
- - [ ] Añadir "backlinks" a las respuestas
- - [ ] Añadir preview de refs
+ - [x] Añadir "backlinks" a las respuestas
+ - [x] Añadir preview de refs
  - [x] Añadir los demás estilos (a parte de Hispachan)
  - [ ] Añadir la opción de descarga en zip
  - [x] Añadir una página dedicada a los resultados de búsqueda
