@@ -99,6 +99,16 @@ class HispachanFiles {
             onVisible: function() {
                 this.html($(`#reply${this.prev().attr('href').substr(1)}`).html());
                 this.find(`a[name=${this.prev().attr('href').substr(1)}]`).attr('name', '');
+                if (this.find('video').length > 0) {
+                    // Si el video está dentro de otro popup, no lo reproduzcas
+                    const videos = this.find('.popup video');
+                    videos.removeAttr('autoplay');
+                }
+            },
+            onHide: function() {
+                if (this.find('video').length > 0) {
+                    this.find('video').get(0).pause();
+                }
             }
         });        
     }
