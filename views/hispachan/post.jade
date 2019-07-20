@@ -6,7 +6,8 @@ if post.file.url
     a(target='_blank', href='/'+post.file.url)
       = post.file.url.split('/').reverse()[0]
     //- Búsqueda de imágenes
-    a(target='_blank', href='https://www.google.com/searchbyimage?image_url='+settings.site.url+'/'+post.file.url, title='Buscar en Google Imágenes...')
+    - var url = post.file.url.substr(-3) == 'mp4' || post.file.url.substr(-4) == 'webm' ? post.file.thumb : post.file.url
+    a(target='_blank', href='https://www.google.com/searchbyimage?image_url='+settings.site.url+'/'+url, title='Buscar en Google Imágenes...')
       | &nbsp;[
       b S
       | ]
