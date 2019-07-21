@@ -102,7 +102,7 @@ function postMeta(post, $) {
         let fileMetaR = fileMeta.text().replace(/(\r\n|\n|\r|[()])/gm, "").split(',');
         let fileSize = fileMetaR[0].trim();
         let fileRes = (fileMetaR.length > 1) ? fileMetaR[1].trim() : '';
-        let fileON = (fileMetaR.length > 2) ? fileMetaR[2].trim() : fileInfo.find('a').first().attr('href').split('/').reverse()[0];
+        let fileON = fileMeta.find('.nombrefile').attr('title') || fileMeta.find('.nombrefile').text().replace(',', '').trim();
         if (fileMetaR.length == 2) fileON = fileMetaR[1].trim();
         data.file = {
             url: fileInfo.find('a').first().attr('href'),
