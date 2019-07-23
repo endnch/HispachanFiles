@@ -111,6 +111,10 @@ class HispachanFiles {
                 }
             }
         });        
+        $('.backlink').click(function() {
+            $('.reply').removeClass('highlight');
+            $(`#reply${$(this).attr('href').substr(1)}`).addClass('highlight');
+        });
     }
 }
 
