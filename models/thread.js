@@ -51,5 +51,6 @@ module.exports = mongoose.model('Thread', {
     admin: Boolean,
     mod: Boolean,
     locked: Boolean,
-    sticky: Boolean
+    sticky: Boolean,
+    dice: Boolean
 });

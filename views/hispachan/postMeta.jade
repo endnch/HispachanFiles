@@ -33,5 +33,7 @@ span.extrabtns
   if post.locked
     img(src='https://www.hispachan.org/css/locked.gif', alt='Cerrado')
   if post.sticky
-    img(src='https://www.hispachan.org/css/sticky.gif', alt='Hilo fijado')
+    img(src='https://www.hispachan.org/css/sticky.gif', alt='Hilo fijado', title='Hilo fijo')
+  if post.dice
+    img(src='https://www.hispachan.org/buttons/dado.png', alt='Se permiten dados', title='En este hilo se permite lanzar dados.')
 br

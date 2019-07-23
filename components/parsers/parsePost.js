@@ -48,6 +48,11 @@ function postMeta(post, $) {
     if (post.find('[alt="Hilo fijado"]').length > 0) {
         data.sticky = true;
     }
+
+    // Dados
+    if (post.find('[alt="Se permiten dados"]').length > 0) {
+        data.dice = true;
+    }
         
     // Fecha y Hora
     let dateRe    = /(\d{1,2})\/(\d{1,2})\/(\d{1,2}) (\d{1,2}):(\d{1,2})/;
