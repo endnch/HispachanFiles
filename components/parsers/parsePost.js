@@ -65,7 +65,7 @@ function postMeta(post, $) {
     let dC = post.find('blockquote').first().find('span.dado');
     if(dC.length > 0)
     {
-        data.dado = dC.find('b').text();
+        data.dado = dC.text().replace('=', '').trim();
         dC.remove();
     }
 
