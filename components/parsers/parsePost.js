@@ -24,6 +24,13 @@ function postMeta(post, $) {
         data.flag = bandera.attr("src");
     }
 
+    // Bandera LGBT+
+    if (post.find('img[title="Bandera LGBT+"]').length > 0) {
+        const bandera = post.find('img[title="Bandera LGBT+"]').first();
+        data.flag = 'https://www.hispachan.org' + bandera.attr("src");
+        data.posterCountryName = 'Bandera LGBT+';
+    }
+
     // OP
     if (post.find(".op").length > 0) {
         data.op = true;
