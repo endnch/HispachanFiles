@@ -47,10 +47,14 @@ module.exports = mongoose.model('Thread', {
         op: Boolean,
         admin: Boolean,
         mod: Boolean,
+        anonId: String,
+        anonIdColor: String,
     }],
     admin: Boolean,
     mod: Boolean,
     locked: Boolean,
     sticky: Boolean,
-    dice: Boolean
+    dice: Boolean,
+    anonId: String,
+    anonIdColor: String
 });

@@ -12,9 +12,20 @@ function postMeta(post, $) {
     // ID de posteo
     data.postId = parseInt(post.find('.reflink').first().find('a').last().text().trim());
     // Nombre del posteador (en boards con campo de nombre)
-    data.posterName = post.find('span.postername').first().contents().filter(function(){ 
+    const posterName = post.find('span.postername').first().contents().filter(function(){ 
       return this.nodeType == 3; 
-    })[0].nodeValue.trim();
+    });
+
+    if (posterName.length > 0) {
+        data.posterName = posterName[0].nodeValue.trim();
+    }
+
+    // ID anónimo
+    if (post.find(".anonid").length > 0) {
+        const anonId = post.find('.anonid').first();
+        data.anonId = anonId.text();
+        data.anonIdColor = anonId.css('background-color');
+    }
         
     // Bandera
     if (post.find(".bandera").length > 0) {

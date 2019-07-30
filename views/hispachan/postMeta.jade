@@ -11,7 +11,11 @@ label
   if post.flag
     span &nbsp;
     img.bandera(src=post.flag, alt=post.posterCountry, title=post.posterCountryName)
-  span.postername= ' ' + post.posterName
+  if post.posterName
+    span.postername= ' ' + post.posterName
+  //- ID anónimo
+  if post.anonId
+    span.anonid(style='background-color:' + post.anonIdColor)= post.anonId
   //- Chapas
   if post.op
     span.badge OP

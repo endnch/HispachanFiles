@@ -269,3 +269,16 @@ hr
     margin-bottom: 2px;
     border-radius: 4px;
 }
+
+.anonid {
+    display: inline-block;
+    font-size: 80%;
+    font-weight: 400;
+    padding: 2px 5px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-shadow: 1px 1px black;
+    color: white;    
+}
