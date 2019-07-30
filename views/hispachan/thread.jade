@@ -20,7 +20,7 @@ block content
   #hispaBox(v-cloak, hf-board=thread.board, hf-id=thread.postId)
     br
     hr
-    .replymode Archivado por última vez {{ #{thread.lastUpdate} | moment 'DD/MM/YY HH:MM'}} (Hora Local).
+    .replymode Archivado por última vez {{ '#{thread.lastUpdate}' | moment 'DD/MM/YY HH:mm'}} (Hora Local).
     hr
     div(id='thread'+thread.postId+thread.board)
       - var post = thread
