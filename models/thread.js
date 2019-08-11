@@ -24,7 +24,8 @@ module.exports = mongoose.model('Thread', {
         size: String,
         resolution: String,
         name: String,
-        thumb: String
+        thumb: String,
+        md5: String
     },
     replyCount: Number,
     replies: [{
@@ -42,7 +43,8 @@ module.exports = mongoose.model('Thread', {
             size: String,
             resolution: String,
             name: String,
-            thumb: String
+            thumb: String,
+            md5: String
         },
         op: Boolean,
         admin: Boolean,

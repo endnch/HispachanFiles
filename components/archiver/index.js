@@ -11,6 +11,7 @@ const fs       = require('fs');
 const async    = require('async');
 const request  = require('request');
 const glob     = require('glob');
+const crypto   = require('crypto');
 
 const Thread   = require('../../models/thread');
 const ArchiverTimer = require('./timer');
@@ -170,11 +171,20 @@ class Archiver {
                     }
                     else{
                         // Descargar archivo
-                        request(post.file.url).on('response',  ()=>{cb()}).on('error', ()=>{cb()}).pipe(fs.createWriteStream(filePath));
+                        request(post.file.url).on('end',  ()=>{cb()}).on('error', ()=>{cb()}).pipe(fs.createWriteStream(filePath));
                     }
                     // Establecer nueva ubicación
                     post.file.url = filePath;
                 });
+            },
+            cb => {
+                const filePath = that.current.fileDir + post.file.url.split('/').reverse()[0];
+                fs.createReadStream(filePath).
+                  pipe(crypto.createHash('md5').setEncoding('hex')).
+                  on('finish', function () {
+                    post.file.md5 = this.read();
+                    cb();
+                  });                
             }
         ], err => {
             that.reportProgress('Guardando archivos...', ++that.current.saved, that.current.data.replyCount + 1);
