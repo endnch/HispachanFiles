@@ -7,10 +7,16 @@ if post.file.url
       = post.file.url.split('/').reverse()[0]
     //- Búsqueda de imágenes
     - var url = post.file.url.substr(-3) == 'mp4' || post.file.url.substr(-4) == 'webm' ? post.file.thumb : post.file.url
-    a(target='_blank', href='https://www.google.com/searchbyimage?image_url='+settings.site.url+'/'+url, title='Buscar en Google Imágenes...')
-      | &nbsp;[
-      b S
-      | ]
+    - var extension = post.file.url.split('.').reverse()[0]
+    if extension == 'gif' || extension == 'jpg' || extension == 'mp4' || extension == 'png' || extension == 'webm'
+      a(target='_blank', href='https://www.google.com/searchbyimage?image_url='+settings.site.url+'/'+url, title='Buscar en Google Imágenes...')
+        | &nbsp;[
+        b S
+        | ]
+      a(target='_blank', href='http://imgops.com/'+settings.site.url+'/'+url)
+        | &nbsp;[
+        b ImgOps
+        | ]
     //- Información del archivo
     span(style='font-size:85%')
       = ' ( ' + post.file.size
