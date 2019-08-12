@@ -14,8 +14,10 @@ if post.file.url
     //- Información del archivo
     span(style='font-size:85%')
       = ' ( ' + post.file.size
-      span.moculto= ', ' + post.file.resolution
-      span.nombrefile= ', ' + post.file.name
+      if post.file.resolution
+        span.moculto= ', ' + post.file.resolution
+      if post.file.name
+        span.nombrefile= ', ' + post.file.name
       = ' )'
   br
   //- Thumb

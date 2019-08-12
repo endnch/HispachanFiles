@@ -126,7 +126,8 @@ function postMeta(post, $) {
         let fileSize = fileMetaR[0].trim();
         let fileRes = (fileMetaR.length > 1) ? fileMetaR[1].trim() : '';
         let fileON = fileMeta.find('.nombrefile').attr('title') || fileMeta.find('.nombrefile').text().replace(',', '').trim();
-        if (fileMetaR.length == 2) fileON = fileMetaR[1].trim();
+        if (fileMetaR.length == 2) fileRes = undefined;
+        if (!fileON) fileON = undefined;
         data.file = {
             url: fileInfo.find('a').first().attr('href'),
             size: fileSize,
