@@ -96,7 +96,7 @@ router.get('/search', (req, res) => {
             }
             cb();
         },
-        cb => Thread.find(query).skip((p - 1) * 10).limit(10).exec(cb),
+        cb => Thread.find(query, null, { sort: { date: -1 } }).skip((p - 1) * 10).limit(10).exec(cb),
     ], (err, result) => {
         if (err) {
             res.render('search-results', {
@@ -151,7 +151,7 @@ router.get('/all', (req, res) => {
             }
             cb();
         },
-        cb => Thread.find(query).skip((p - 1) * 10).limit(10).exec(cb),
+        cb => Thread.find(query, null, { sort: { date: -1 } }).skip((p - 1) * 10).limit(10).exec(cb),
     ], (err, result) => {
         if (err) {
             res.render('all-threads', {
