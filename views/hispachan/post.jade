@@ -11,11 +11,19 @@ if post.file.url
     if extension == 'gif' || extension == 'jpg' || extension == 'mp4' || extension == 'png' || extension == 'webm'
       a(target='_blank', href='https://www.google.com/searchbyimage?image_url='+settings.site.url+'/'+url, title='Buscar en Google Imágenes...')
         | &nbsp;[
-        b S
+        b Google
         | ]
       a(target='_blank', href='http://imgops.com/'+settings.site.url+'/'+url)
         | &nbsp;[
         b ImgOps
+        | ]
+      a(target='_blank', href='https://iqdb.org/?url='+settings.site.url+'/'+url)
+        | &nbsp;[
+        b iqdb
+        | ]
+      a(target='_blank', href='https://saucenao.com/search.php?url='+settings.site.url+'/'+url)
+        | &nbsp;[
+        b SauceNAO
         | ]
     //- Información del archivo
     span(style='font-size:85%')
