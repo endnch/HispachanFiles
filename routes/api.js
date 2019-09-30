@@ -7,6 +7,7 @@ const cheerio = require('cheerio');
 const parseThread = require('../components/parsers/parseThread.js');
 const parseBoard = require('../components/parsers/parseBoard.js');
 const publicSettings = require('../settings');
+const Feed = require('feed').Feed;
 
 // Responder con XML o JSONP dependiendo de la solicitud
 function parseResponse(req, res, data, root) {
@@ -103,6 +104,66 @@ router.get('/hispachan/', function(req, res, next) {
         }
         
         parseResponse(req,res,data, 'hispachan')
+    });
+});
+
+router.get('/rss/:board/res/:th', (req, res, next) => {
+    let data = {};
+    let thId = req.params.th.split('.')[0];
+    let board = req.params.board;
+
+    // Enviar la solicitud a Hispachan
+    request(`https://www.hispachan.org/${board}/res/${thId}.html`, (err, resp, body) => {
+        if (err) {
+            // Otro error
+            parseResponse(req, res, { status: 500 });
+            return;
+        }
+        if (resp.statusCode == 404) {
+            // El hilo está en 404.
+            parseResponse(req, res, { status: 404 });
+            return;
+        }
+        // Cargar HTML y parsear con Cheerio
+        let $ = cheerio.load(body);
+        let th = $('[id^="thread"]');
+
+        data = (th.length > 0) ? parseThread(th.first(), $) : { status: 404 };
+
+        const feed = new Feed({
+          title: `/${data.board}/ - ${data.subject || data.message.substr(0, 40)}`,
+          id: data.postId,
+          link: `https://www.hispachan.org/${board}/res/${thId}.html`,
+          description: data.message,
+          image: data.file ? data.file.thumb : undefined,
+          favicon: "https://www.hispachan.org//favicon.ico",
+        });        
+
+        data.replies.reverse().forEach(post => {
+            feed.addItem({
+                title: post.anonId || 'Anónimo',
+                id: post.postId,
+                link: `https://www.hispachan.org/${board}/res/${thId}.html#${post.postId}`,
+                description: post.message,
+                content: post.message,
+                date: post.date,
+                image: post.file ? post.file.thumb : undefined
+            });
+        });
+
+        const post = data;
+        feed.addItem({
+            title: post.anonId || 'Anónimo',
+            id: post.postId,
+            link: `https://www.hispachan.org/${board}/res/${thId}.html`,
+            description: post.message,
+            content: post.message,
+            date: post.date,
+            image: post.file.thumb
+        });
+
+        res.type('application/xml');
+        res.send(feed.rss2());
     });
 });
 
