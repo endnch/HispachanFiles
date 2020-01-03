@@ -100,14 +100,14 @@ router.get('/search', (req, res) => {
     ], (err, result) => {
         if (err) {
             res.render('search-results', {
-                title: `Resultados de búsqueda ${q} - ${publicSettings.site.title}`,
+                title: `Resultados de búsqueda ${q || `/${board}/`} - ${publicSettings.site.title}`,
                 settings: publicSettings,
                 currentQuery: q, totalPages: 1, items: [], pages: []
             });
         }
         else {
             res.render('search-results', {
-                title: `Resultados de búsqueda ${q} - ${publicSettings.site.title}`,
+                title: `Resultados de búsqueda ${q || `/${board}/`} - ${publicSettings.site.title}`,
                 settings: publicSettings,
                 currentQuery: q, currentBoard: board, totalPages: totalPages, items: result, pages: pages
             });
