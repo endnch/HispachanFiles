@@ -12,7 +12,7 @@ Este es el primer proyecto de gran escala que hago en Node, así que si hay algo
 - Instala Node.js y Mongo
 - Descarga / Clona el repositorio:
 ```
-git clone --recursive https://github.com/HispachanFiles/HispachanFiles.git
+git clone --recursive https://github.com/endnch/HispachanFiles.git
 ```
 - Edita los archivos de configuración (`settings.js` y `server-settings.js`).
 - Abre una terminal en la carpeta del repositorio
@@ -53,5 +53,8 @@ Esta nueva versión de HispaFiles está hecha completamente desde cero, así que
  - [ ] Añadir la opción de descarga en zip
  - [x] Añadir una página dedicada a los resultados de búsqueda
  - [ ] Añadir estadísticas publicas en la página principal (número de hilos guardados, espacio usado, etc)
+ - [ ] Mejorar la búsqueda de hilos
+ - [ ] Mejorar la API
+ - [ ] Escribir documentación
 
-Si se te ocurre algo mas, o encuentras un bug, puedes [contactarme](mailto:hispachanfiles@gmail.com) o abrir una issue. O incluso mejor, podrías hacer una pull request.
+Si se te ocurre algo más, o encuentras un bug, puedes [contactarme](mailto:hispafiles@cock.li) o abrir un issue. O incluso mejor, podrías hacer un pull request.
