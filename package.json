@@ -21,7 +21,7 @@
     "mkdirp": "^0.5.1",
     "mongoose": "^4.4.12",
     "morgan": "~1.6.1",
-    "node-sass-middleware": "^0.9.7",
+    "node-sass-middleware": "^0.11.0",
     "nprogress": "^0.2.0",
     "request": "^2.70.0",
     "rimraf": "~2.2.8",
