@@ -8,6 +8,7 @@ const parseThread = require('../components/parsers/parseThread.js');
 const parseBoard = require('../components/parsers/parseBoard.js');
 const publicSettings = require('../settings');
 const Feed = require('feed').Feed;
+const async = require('async');
 
 // Responder con XML o JSONP dependiendo de la solicitud
 function parseResponse(req, res, data, root) {
@@ -51,6 +52,43 @@ router.get('/hispachan/:board/res/:th', (req, res, next) => {
 
         data = (th.length > 0) ? parseThread(th.first(), $) : { status: 404 };
         parseResponse(req, res, data, 'thread');
+    });
+});
+
+router.get('/hispachan/catalog/:board', (req, res, next) => {
+    let data = [];
+    let board = req.params.board;
+
+    request(`https://www.hispachan.org/${board}/`, (err, resp, body) => {
+        if (resp.statusCode == 404) {
+            parseResponse(req, res, { status: 404 });
+            return;
+        }
+        if (err) {
+            parseResponse(req, res, { status: 500 });
+            return;
+        }
+
+        async.each([0,1,2,3,4,5,6,7], (page, cb) => {
+            request(`https://www.hispachan.org/${board}/` + (page == 0 ? '' : `${page}.html`), (err, resp, body) => {
+                if (err || resp.statusCode == 404) {
+                    cb();
+                    return;
+                }
+
+                let $ = cheerio.load(body);
+                let board = $('body');
+                
+                data.push(parseBoard(board, $, page));
+                cb();
+            });
+        }, (err) => {
+            if (err) {
+                parseResponse(req, res, { status: 500 });
+                return;
+            }
+            parseResponse(req, res, data.sort((a, b) => a.page - b.page));
+        });
     });
 });
 

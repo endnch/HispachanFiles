@@ -26,9 +26,11 @@ block content
     pre #{settings.site.url}/api/hispachan/{board}/{pagina}.html
     p(style="opacity:.5") (.html es opcional, si no se específica {pagina}, se obtendrá la página 0)
     p Parsea una página de board entera, incluyendo las 3 últimas respuestas de cada hilo y sus respectivos metadatos
+    h4 Obtener el catálogo de los boards
+    pre #{settings.site.url}/api/hispachan/catalog/{board}/
+    p Parsea todas las páginas de un tablón
     br
     h2 ¿Qué se podrá hacer en un futuro?
-    h4 Obtener el catálogo de los boards
     h4 Acceso a las estadísticas públicas de Hispachan
     h4 Búsqueda de hilos
     p Postear cosas directamente desde la API no está planificado (y probablemente nunca lo esté) por motivos de seguridad.
