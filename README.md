@@ -3,13 +3,13 @@
 
 Hispachan Files es una herramienta para guardar hilos de [hispachan.org](https://www.hispachan.org). También ofrece una API no-oficial para el mismo.
 
-Utiliza [Node.js](https://nodejs.org/) en el servidor, [Mongo](https://www.mongodb.org/) como base de datos y [Vue.js](http://www.vuejs.org/) + [Semantic UI](http://semantic-ui.com/) para el front end.
+Utiliza [Node.js v10](https://nodejs.org/) en el servidor, [Mongo](https://www.mongodb.com/) como base de datos y [Vue.js](http://www.vuejs.org/) + [Semantic UI](http://semantic-ui.com/) para el front end.
 
 Este es el primer proyecto de gran escala que hago en Node, así que si hay algo en mi código que te arda el culito, no seas marica y abre un pull request.
 
 ## Instalación Local
 
-- Instala Node.js y Mongo
+- Instala [Node.js v10](https://nodejs.org/download/release/latest-v10.x/) y [Mongo](https://www.mongodb.com/download-center/community)
 - Descarga / Clona el repositorio:
 ```
 git clone --recursive https://github.com/endnch/HispachanFiles.git
