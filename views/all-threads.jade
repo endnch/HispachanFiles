@@ -25,7 +25,7 @@ block content
     //- Páginas
     center
       if totalPages > 1
-        .ui.pagination.menu
+        .ui.pagination.menu.red.inverted
           each page in pages
             if page.type == 'page'
               a(class=page.active?'item active':'item', href='/all?p='+page.num) #{page.num}
