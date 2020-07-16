@@ -14,7 +14,7 @@ module.exports = mongoose.model('Thread', {
     posterCountry: String,
     posterCountryName: String,
     flag: String,
-    date: Date,
+    date: { type: Date, index: true },
     lastUpdate: { type: Date, default: Date.now },
     dado: String,
     fortuna: String,
