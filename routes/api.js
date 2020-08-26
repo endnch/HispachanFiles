@@ -36,7 +36,7 @@ router.get('/hispachan/:board/res/:th', (req, res, next) => {
 
     // Enviar la solicitud a Hispachan
     request(`https://www.hispachan.org/${board}/res/${thId}.html`, (err, resp, body) => {
-        if (res.statusCode == 404) {
+        if (resp.statusCode == 404) {
             // El hilo está en 404.
             parseResponse(req, res, { status: 404 });
             return;
@@ -99,7 +99,7 @@ router.get('/hispachan/:board/:page?', (req, res, next) => {
 
     // Enviar la solicitud a Hispachan
     request(`https://www.hispachan.org/${board}/` + (page > 0 ? page + '.html' : ''), (err, resp, body) => {
-        if (res.statusCode == 404) {
+        if (resp.statusCode == 404) {
             parseResponse(req, res, { status: 404 });
             return;
         }
@@ -118,29 +118,30 @@ router.get('/hispachan/:board/:page?', (req, res, next) => {
 });
 
 router.get('/hispachan/', function(req, res, next) {
-    let data = {};
-    data.apiVersion = '0.3.0';
-    request(`https://www.hispachan.org/${board}/res/${thId}.html`, (err, resp, body) => {
-        if (res.statusCode == 404 || err) {
-            parseResponse(req, res, { status: 500 });
-            return;
+    const data = {};
+    request(`https://www.hispachan.org/m/`, (err, resp, body) => {
+        if (resp.statusCode == 404 || err) {
+            return parseResponse(req, res, { status: 500 });
         }
-        let $ = cheerio.load(str);
-        // Obtener un listado completo de boards
-        if (board.find('input[name="board"]').length > 0) {
-            let boardLinks = $('.barra').first().find('a[rel="board"]');
-            data.boards = [];
-            boardLinks.each((ix, el) => {
-                data.boards.push({
-                    path: $(el).attr('href'),
-                    title: $(el).attr('title')
-                });
+
+        const $ = cheerio.load(body);
+        const board = $('body');
+
+        if (board.find('input[name="board"]').length == 0) {
+            return parseResponse(req, res, { status: 404 });
+        }
+
+        // Obtener un listado completo de tablones
+        const boardLinks = $('.barra').first().find('a.navbar-board');
+        data.boards = [];
+        boardLinks.each((i, el) => {
+            data.boards.push({
+                board: $(el).attr('data-board-short-name'),
+                path: $(el).attr('href'),
+                title: $(el).attr('title')
             });
-        }
-        else {
-            data = { status: 404 }
-        }
-        
+        });
+
         parseResponse(req,res,data, 'hispachan')
     });
 });

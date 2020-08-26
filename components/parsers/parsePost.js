@@ -74,7 +74,7 @@ function postMeta(post, $) {
         
     // Fecha y Hora
     let dateRe    = /(\d{1,2})\/(\d{1,2})\/(\d{1,2}) (\d{1,2}):(\d{1,2})/;
-    let dateParts = post.find('.timer')[0].firstChild.attribs["data-date"].trim().match(dateRe);
+    const dateParts = post.find('.timer a')[0].attribs["data-date"].trim().match(dateRe);
     let date      = new Date(Date.UTC(
         parseInt('20' + dateParts[3]),
         parseInt(dateParts[2]) -1,
