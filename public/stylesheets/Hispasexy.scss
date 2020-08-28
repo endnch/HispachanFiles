@@ -1,0 +1,46 @@
+/*
+ * Estilo Hispasexy
+ *
+ * Porteado manualmente desde hispasexy.org
+ */
+
+// Colores
+$bg-color:      #F7F7F8;
+$fg-color:      #000000;
+$bg-accent:     #EB176F;
+$fg-accent:     #FFFFFF;
+$link-color:    #D41564;
+$link-hover:    #000000;
+$pb-background: #FFFFFF;
+$pb-foreground: #572B47;
+$pb-border:     #CCCCCC;
+$pb-highlight:  #E1E1E1;
+$greentext:     #1D7A15;
+$ommited-posts: #823666;
+$abbrev-color:  #572B47;
+$highlight-fg:  #000000;
+$highlight-bg:  #FFF5F9;
+$highlight-bo:  #EB176F;
+$divider-color: #D2A1B4;
+$code-bg:       #F7EDF5;
+$code-border:   #BD8BB0;
+$doubledash:    #B076AC;
+$postername:    #78526A;
+$filetitle:     #EB176F;
+$badge-bg:      #000000;
+$badge-color:   #ffffff;
+
+// Mixins
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+
+// Estilos base
+@import 'HispachanFiles';
+@import 'ku/imageboard';
+@import 'ku/hispaboard';
+@import 'ku/hispamovil';
