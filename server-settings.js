@@ -1,19 +1,19 @@
 /**
  * Hispachan Files
- * 
+ *
  * Opciones del servidor
  */
 'use strict';
 
-module.exports=
+module.exports =
 {
-    
+
     /* Base de datos */
     db:
     {
-        url: 'mongodb://localhost/hispaFiles'
+        url: 'mongodb://localhost/hispaFiles',
     },
-    
+
     /* HTTPS */
     ssl:
     {
@@ -24,9 +24,9 @@ module.exports=
         // Ubicación de la clave parra el certificado
         key: '/home/HispaFiles/certKey.pem',
         // Si tienes un archivo PFX, coloca su ruta aquí, y establece cert y key en undefined.
-        pfx: undefined
+        pfx: undefined,
     },
-    
+
     /* Clave para borrado de hilos (esto es temporal) */
     delPass: 'zetaputo',
-}
+};

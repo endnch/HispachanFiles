@@ -9,21 +9,17 @@ const postMeta = require('./parsePost');
  * @return {Object} data
  */
 function threadMeta(thread, $) {
-    // Objeto para almacenar los datos
-    var data = {};
     // Metadatos básicos
-    data = postMeta(thread);
+    const data = postMeta(thread);
     data.board = $('input[name="board"]').val();
-    data.subject = thread.find('span.filetitle').first().text().replace(/(\r\n|\n|\r)/gm, "");
-    var replies = thread.find(".reply");
+    data.subject = thread.find('span.filetitle').first().text().replace(/(\r\n|\n|\r)/gm, '');
+    const replies = thread.find('.reply');
     data.replyCount = replies.length;
-    var omitted = thread.find(".omittedposts");
-    if(omitted.length > 0)
-    {
-        var oX = omitted.text();
-        var oM = oX.match(/\d+/g);
-        if(oM.length > 0)
-        {
+    const omitted = thread.find('.omittedposts');
+    if (omitted.length > 0) {
+        const oX = omitted.text();
+        const oM = oX.match(/\d+/g);
+        if (oM.length > 0) {
             data.omittedPosts = parseInt(oM[0]);
             data.replyCount += parseInt(oM[0]);
             data.omittedImages = (oM.length > 1) ? parseInt(oM[1]) : 0;
@@ -33,7 +29,7 @@ function threadMeta(thread, $) {
     replies.each((i, el) => {
         data.replies.push(postMeta($(el), $));
     });
-    
+
     return data;
 }
 

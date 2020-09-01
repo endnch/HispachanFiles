@@ -1,6 +1,6 @@
 /**
  * Hispachan Files
- * 
+ *
  * Modelo de mongoose para hilos
  */
 'use strict';
@@ -25,7 +25,7 @@ module.exports = mongoose.model('Thread', {
         resolution: String,
         name: String,
         thumb: String,
-        md5: String
+        md5: String,
     },
     replyCount: Number,
     replies: [{
@@ -44,7 +44,7 @@ module.exports = mongoose.model('Thread', {
             resolution: String,
             name: String,
             thumb: String,
-            md5: String
+            md5: String,
         },
         op: Boolean,
         admin: Boolean,
@@ -58,5 +58,5 @@ module.exports = mongoose.model('Thread', {
     sticky: Boolean,
     dice: Boolean,
     anonId: String,
-    anonIdColor: String
+    anonIdColor: String,
 });

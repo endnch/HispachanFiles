@@ -11,16 +11,16 @@ const threadMeta = require('./parseThread');
  */
 function boardMeta(board, $, page) {
     // Objeto para almacenar los datos
-    var data = {};
+    const data = {};
     // Buscar hilos
-    var threads = board.find('div[id^="thread"]');
+    const threads = board.find('div[id^="thread"]');
     data.board = $('input[name="board"]').val();
     data.page = page;
     data.threads = [];
     threads.each((i, el) => {
         data.threads.push(threadMeta($(el), $));
     });
-    
+
     return data;
 }
 

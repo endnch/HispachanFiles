@@ -1,27 +1,29 @@
-var express = require('express');
-var socket_io = require( "socket.io" );
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var sass = require('node-sass-middleware');
-var mongoose = require('mongoose');
+'use strict';
 
-var routes = require('./routes/index');
-var apiRoutes = require('./routes/api');
-var socketRoutes = require('./routes/socket');
-var threadRoutes = require('./routes/thread');
-var searchRoutes = require('./routes/search');
+const express = require('express');
+const socket_io = require('socket.io');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const sass = require('node-sass-middleware');
+const mongoose = require('mongoose');
 
-var settings = require('./settings');
-var serverSettings = require('./server-settings');
+const routes = require('./routes/index');
+const apiRoutes = require('./routes/api');
+const socketRoutes = require('./routes/socket');
+const threadRoutes = require('./routes/thread');
+const searchRoutes = require('./routes/search');
 
-var app = express();
+const settings = require('./settings');
+const serverSettings = require('./server-settings');
+
+const app = express();
 
 // Socket.io
-var io           = socket_io();
-app.io           = io;
+const io = socket_io();
+app.io = io;
 
 // Mongoose
 mongoose.connect(serverSettings.db.url);
@@ -30,9 +32,9 @@ mongoose.connect(serverSettings.db.url);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(sass({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  sourceMap: true
+    src: path.join(__dirname, 'public'),
+    dest: path.join(__dirname, 'public'),
+    sourceMap: true,
 }));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -45,36 +47,32 @@ app.use('/data', express.static(path.join(__dirname, 'data')));
 app.use('/', routes);
 app.use('/', threadRoutes);
 app.use('/', searchRoutes);
-if(settings.features.apiEnabled)
-{
+if (settings.features.apiEnabled) {
     app.use('/api', apiRoutes);
 }
 
 io.on('connection', socketRoutes);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use((req, res, next) => {
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
 
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  if(app.get('env') === 'development')
-  {
-      res.jsonp(err);
-  }
-  else
-  {
-      res.render('error', {
-          title: `Error - ${settings.site.title}`,
-          settings: settings,
-          error: err
-      });
-  }
+app.use((err, req, res) => {
+    res.status(err.status || 500);
+    if (app.get('env') === 'development') {
+        res.jsonp(err);
+    } else {
+        res.render('error', {
+            title: `Error - ${settings.site.title}`,
+            settings: settings,
+            error: err,
+        });
+    }
 });
 
 

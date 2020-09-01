@@ -1,14 +1,14 @@
 /**
  * Hispachan Files
- * 
+ *
  * Archivo de configuración.
  * Este archivo es visible desde los navegadores, no pongas información delicada aquí.
  */
 'use strict';
 
-module.exports=
+module.exports =
 {
-    
+
     /* Configuración del sitio */
     site:
     {
@@ -23,7 +23,7 @@ module.exports=
         // Si usas https://, necesitas configurar un certificado en server-settings.js
         url: 'http://localhost:8000',
     },
-    
+
     /* Características del sitio */
     features:
     {
@@ -32,18 +32,18 @@ module.exports=
         // Establecer en false para desactivar la descarga en zip de hilos
         zipDownload: true,
         // Establecer en false para desactivar el acceso externo a la API
-        apiEnabled: true
+        apiEnabled: true,
     },
-    
+
     /* Estilos */
     styles:
     {
         // Estilos (S)CSS disponibles (colocalos en /public/stylesheets/)
         available: ['Hispachan', 'Hispablue', 'Hispabook', 'Hispanaranja', 'Hispasecta', 'Hispagirl', 'Hispahack', 'Hispademon',  'Hispanight', 'Hispaenie', 'Hispagris', 'Hispamierda', 'Hispasexy'],
         // Estilo por defecto
-        defaultStyle: 'Hispachan'
+        defaultStyle: 'Hispachan',
     },
-    
+
     /* Miscelaneo */
     misc:
     {
@@ -52,7 +52,7 @@ module.exports=
         // se enviarán automáticamente los reportes de hilos a esta dirección.
         email: 'zeta@pagalacoca.com',
         // Mínimo número de respuestas para que un hilo sea almacenado
-        minimumReplies: 20,
-    }
-    
-}
+        minimumReplies: 0,
+    },
+
+};
