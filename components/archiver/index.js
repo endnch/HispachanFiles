@@ -50,7 +50,9 @@ class Archiver {
         }
 
         // Almacenar imagen de OP
-        await this.storeAttachment(thread.data);
+        if (thread.data.file) {
+            await this.storeAttachment(thread.data);
+        }
 
         // Almacenar en la base de datos
         const query = { 'postId': thread.data.postId, 'board': thread.data.board };
@@ -85,7 +87,12 @@ class Archiver {
 
         if (!fs.existsSync(thumbPath)) {
             // Descargar thumb
-            await downloadFile(post.file.thumb, thumbPath);
+            const response = await axios.get(post.file.thumb, { responseType: 'stream' });
+            await new Promise((resolve, reject) => {
+                response.data.pipe(fs.createWriteStream(thumbPath))
+                    .on('error', error => { reject(error) })
+                    .on('finish', () => { resolve() });
+            });
         }
         // Establecer nueva ubicación
         post.file.thumb = thumbPath;
@@ -96,17 +103,17 @@ class Archiver {
 
         if (!fs.existsSync(filePath)) {
             // Descargar archivo
-            await downloadFile(post.file.url, filePath);
+            const response = await axios.get(post.file.url, { responseType: 'stream' });
+            await new Promise((resolve, reject) => {
+                response.data.pipe(fs.createWriteStream(filePath))
+                    .on('error', error => { reject(error) })
+                    .on('finish', () => { resolve() });
+            });
             post.file.md5 = md5(fs.readFileSync(filePath));
         }
         // Establecer nueva ubicación
         post.file.url = filePath;
     }
 }
-
-const downloadFile = async (url, path) => {
-    const response = await axios.get(url, { responseType: 'stream' });
-    response.data.pipe(fs.createWriteStream(path));
-};
 
 module.exports = new Archiver();
