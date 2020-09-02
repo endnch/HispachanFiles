@@ -7,8 +7,8 @@
 
 const mkdirp   = require('mkdirp');
 const fs       = require('fs');
-const request  = require('request');
 const md5      = require('md5');
+const axios    = require('axios');
 
 const Thread   = require('../../models/thread');
 
@@ -104,13 +104,9 @@ class Archiver {
     }
 }
 
-const downloadFile = (url, path) => {
-    return new Promise((resolve, reject) => {
-        request(url)
-            .pipe(fs.createWriteStream(path))
-            .on('finish', () => { resolve() })
-            .on('error', error => { reject(error) });
-    });
+const downloadFile = async (url, path) => {
+    const response = await axios.get(url, { responseType: 'stream' });
+    response.data.pipe(fs.createWriteStream(path));
 };
 
 module.exports = new Archiver();

@@ -2,22 +2,12 @@
 
 const express = require('express');
 const router = express.Router();
-const request = require('request');
 const cheerio = require('cheerio');
 const parseThread = require('../components/parsers/parseThread.js');
 const parseBoard = require('../components/parsers/parseBoard.js');
 const publicSettings = require('../settings');
 const Feed = require('feed').Feed;
-const async = require('async');
-
-// Responder con XML o JSONP dependiendo de la solicitud
-function parseResponse(req, res, data) {
-    if ((typeof req.query.xml === 'undefined' && typeof req.body.xml === 'undefined')) {
-        res.jsonp(data);
-    } else {
-        res.end('No soportado aún.');
-    }
-}
+const axios = require('axios');
 
 router.get('/', (req, res) => {
     // CloudFlare server push
@@ -28,182 +18,186 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/hispachan/:board/res/:th', (req, res) => {
-    let data = {};
+router.get('/hispachan/:board/res/:th', async (req, res) => {
     const thId = req.params.th.split('.')[0];
     const board = req.params.board;
+    let response = {};
 
-    // Enviar la solicitud a Hispachan
-    request(`https://www.hispachan.org/${board}/res/${thId}.html`, (err, resp, body) => {
-        if (resp.statusCode === 404) {
-            // El hilo está en 404.
-            parseResponse(req, res, { status: 404 });
-            return;
+    try {
+        response = await axios.get(`https://www.hispachan.org/${board}/res/${thId}.html`);
+    } catch ({ response }) {
+        if (response.status === 404) {
+            res.status(404).json({ status: 404 });
+        } else {
+            res.status(500).json({ status: 500 });
         }
-        if (err) {
-            // Otro error
-            parseResponse(req, res, { status: 500 });
-            return;
-        }
-        // Cargar HTML y parsear con Cheerio
-        const $ = cheerio.load(body);
-        const th = $('[id^="thread"]');
+        return;
+    }
 
-        data = (th.length > 0) ? parseThread(th.first(), $) : { status: 404 };
-        parseResponse(req, res, data, 'thread');
-    });
+    const $ = cheerio.load(response.data);
+    const th = $('[id^="thread"]');
+
+    if (th.length < 1) {
+        res.status(404).json({ status: 404 });
+        return;
+    }
+
+    res.json(parseThread(th.first(), $));
 });
 
-router.get('/hispachan/catalog/:board', (req, res) => {
+router.get('/hispachan/catalog/:board', async (req, res) => {
+    try {
+        await axios.get(`https://www.hispachan.org/${req.params.board}/`);
+    } catch ({ response }) {
+        if (response.status === 404) {
+            res.status(404).json({ status: 404 });
+        } else {
+            res.status(500).json({ status: 500 });
+        }
+        return;
+    }
+
     const data = [];
-    const board = req.params.board;
 
-    request(`https://www.hispachan.org/${board}/`, (err, resp) => {
-        if (resp.statusCode === 404) {
-            parseResponse(req, res, { status: 404 });
-            return;
-        }
-        if (err) {
-            parseResponse(req, res, { status: 500 });
-            return;
+    for (const page of [0, 1, 2, 3, 4, 5, 6, 7]) {
+        let response = {};
+
+        try {
+            response = await axios.get(`https://www.hispachan.org/${req.params.board}/` + (page === 0 ? '' : `${page}.html`));
+        } catch (error) {
+            continue;
         }
 
-        async.each([0, 1, 2, 3, 4, 5, 6, 7], (page, cb) => {
-            // eslint-disable-next-line eqeqeq
-            request(`https://www.hispachan.org/${board}/` + (page === 0 ? '' : `${page}.html`), (err, resp, body) => {
-                if (err || resp.statusCode === 404) {
-                    cb();
-                    return;
-                }
+        const $ = cheerio.load(response.data);
+        const board = $('body');
 
-                const $ = cheerio.load(body);
-                const board = $('body');
+        data.push(parseBoard(board, $, page));
+    }
 
-                data.push(parseBoard(board, $, page));
-                cb();
-            });
-        }, (err) => {
-            if (err) {
-                parseResponse(req, res, { status: 500 });
-                return;
-            }
-            parseResponse(req, res, data.sort((a, b) => a.page - b.page));
-        });
-    });
+    res.json(data.sort((a, b) => a.page - b.page));
 });
 
-router.get('/hispachan/:board/:page?', (req, res) => {
-    let data = {};
+router.get('/hispachan/:board/:page?', async (req, res) => {
     const page = req.params.page || 0;
-    const board = req.params.board;
+    let response = {};
 
-    // Enviar la solicitud a Hispachan
-    request(`https://www.hispachan.org/${board}/` + (page > 0 ? page + '.html' : ''), (err, resp, body) => {
-        if (resp.statusCode === 404) {
-            parseResponse(req, res, { status: 404 });
-            return;
+    try {
+        response = await axios.get(`https://www.hispachan.org/${req.params.board}/` + (page > 0 ? page + '.html' : ''));
+    } catch ({ response }) {
+        if (response.status === 404) {
+            res.status(404).json({ status: 404 });
+        } else {
+            res.status(500).json({ status: 500 });
         }
-        if (err) {
-            parseResponse(req, res, { status: 500 });
-            return;
-        }
+        return;
+    }
 
-        // Cargar HTML y parsear con Cheerio
-        const $ = cheerio.load(body);
-        const board = $('body');
+    const $ = cheerio.load(response.data);
+    const board = $('body');
 
-        data = (board.find('input[name="board"]').length > 0) ? parseBoard(board, $, page) :  { status: 404 };
-        parseResponse(req, res, data, 'board-page');
-    });
+    if (board.find('input[name="board"]').length < 1) {
+        res.status(404).json({ status: 404 });
+        return;
+    }
+
+    res.json(parseBoard(board, $, page));
 });
 
-router.get('/hispachan/', (req, res) => {
-    const data = {};
-    request('https://www.hispachan.org/m/', (err, resp, body) => {
-        if (resp.statusCode === 404 || err) {
-            return parseResponse(req, res, { status: 500 });
+router.get('/hispachan/', async (req, res) => {
+    let response = {};
+
+    try {
+        response = await axios.get('https://www.hispachan.org/m/');
+    } catch ({ response }) {
+        if (response.status === 404) {
+            res.status(404).json({ status: 404 });
+        } else {
+            res.status(500).json({ status: 500 });
         }
+        return;
+    }
 
-        const $ = cheerio.load(body);
-        const board = $('body');
+    const $ = cheerio.load(response.data);
+    const board = $('body');
 
-        if (board.find('input[name="board"]').length === 0) {
-            return parseResponse(req, res, { status: 404 });
-        }
+    if (board.find('input[name="board"]').length < 1) {
+        res.status(404).json({ status: 404 });
+        return;
+    }
 
-        // Obtener un listado completo de tablones
-        const boardLinks = $('.barra').first().find('a.navbar-board');
-        data.boards = [];
-        boardLinks.each((i, el) => {
-            data.boards.push({
-                board: $(el).attr('data-board-short-name'),
-                path: $(el).attr('href'),
-                title: $(el).attr('title'),
-            });
+    const boardLinks = $('.barra').first().find('a.navbar-board');
+    const boards = [];
+    boardLinks.each((i, el) => {
+        boards.push({
+            board: $(el).attr('data-board-short-name'),
+            path: $(el).attr('href'),
+            title: $(el).attr('title'),
         });
-
-        parseResponse(req, res, data, 'hispachan');
     });
+
+    res.json({ boards });
 });
 
-router.get('/rss/:board/res/:th', (req, res) => {
-    let data = {};
+router.get('/hispachan/:board/rss/:th', async (req, res) => {
     const thId = req.params.th.split('.')[0];
     const board = req.params.board;
+    let response = {};
 
-    // Enviar la solicitud a Hispachan
-    request(`https://www.hispachan.org/${board}/res/${thId}.html`, (err, resp, body) => {
-        if (err) {
-            // Otro error
-            parseResponse(req, res, { status: 500 });
-            return;
+    try {
+        response = await axios.get(`https://www.hispachan.org/${board}/res/${thId}.html`);
+    } catch ({ response }) {
+        if (response.status === 404) {
+            res.status(404).json({ status: 404 });
+        } else {
+            res.status(500).json({ status: 500 });
         }
-        if (resp.statusCode === 404) {
-            // El hilo está en 404.
-            parseResponse(req, res, { status: 404 });
-            return;
-        }
-        // Cargar HTML y parsear con Cheerio
-        const $ = cheerio.load(body);
-        const th = $('[id^="thread"]');
+        return;
+    }
 
-        data = (th.length > 0) ? parseThread(th.first(), $) : { status: 404 };
+    const $ = cheerio.load(response.data);
+    const th = $('[id^="thread"]');
 
-        const feed = new Feed({
-            title: `/${data.board}/ - ${data.subject || data.message.substr(0, 40)}`,
-            id: data.postId,
-            link: `https://www.hispachan.org/${board}/res/${thId}.html`,
-            description: data.message,
-            image: data.file ? data.file.thumb : undefined,
-            favicon: 'https://www.hispachan.org//favicon.ico',
-        });
+    if (th.length < 1) {
+        res.status(404).json({ status: 404 });
+        return;
+    }
 
-        data.replies.reverse().forEach(post => {
-            feed.addItem({
-                title: post.anonId || 'Anónimo',
-                id: post.postId,
-                link: `https://www.hispachan.org/${board}/res/${thId}.html#${post.postId}`,
-                description: post.message,
-                content: post.message,
-                date: post.date,
-                image: post.file ? post.file.thumb : undefined,
-            });
-        });
+    const data = parseThread(th.first(), $);
 
-        const post = data;
+    const feed = new Feed({
+        title: `/${data.board}/ - ${data.subject || data.message.substr(0, 40)}`,
+        id: data.postId,
+        link: `https://www.hispachan.org/${board}/res/${thId}.html`,
+        description: data.message,
+        image: data.file ? data.file.thumb : undefined,
+        favicon: 'https://www.hispachan.org//favicon.ico',
+    });
+
+    data.replies.reverse().forEach(post => {
         feed.addItem({
             title: post.anonId || 'Anónimo',
             id: post.postId,
-            link: `https://www.hispachan.org/${board}/res/${thId}.html`,
+            link: `https://www.hispachan.org/${board}/res/${thId}.html#${post.postId}`,
             description: post.message,
             content: post.message,
             date: post.date,
-            image: post.file.thumb,
+            image: post.file ? post.file.thumb : undefined,
         });
-
-        res.type('application/xml');
-        res.send(feed.rss2());
     });
+
+    const post = data;
+    feed.addItem({
+        title: post.anonId || 'Anónimo',
+        id: post.postId,
+        link: `https://www.hispachan.org/${board}/res/${thId}.html`,
+        description: post.message,
+        content: post.message,
+        date: post.date,
+        image: post.file ? post.file.thumb : undefined,
+    });
+
+    res.type('application/xml');
+    res.send(feed.rss2());
 });
 
 module.exports = router;
