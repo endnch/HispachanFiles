@@ -6,6 +6,7 @@ module.exports = {
         'commonjs': true,
         'es6': true,
         'node': true,
+        'jest': true,
     },
     'extends': 'eslint:recommended',
     'parserOptions': {
@@ -76,6 +77,10 @@ module.exports = {
         'comma-spacing': [
             'error',
             { 'before': false, 'after': true },
+        ],
+        'key-spacing': [
+            'error',
+            { 'afterColon': true },
         ],
     },
     'overrides': [

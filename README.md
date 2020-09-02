@@ -3,13 +3,13 @@
 
 Hispachan Files es una herramienta para guardar hilos de [hispachan.org](https://www.hispachan.org). También ofrece una API no-oficial para el mismo.
 
-Utiliza [Node.js v10](https://nodejs.org/) en el servidor, [Mongo](https://www.mongodb.com/) como base de datos y [Vue.js](http://www.vuejs.org/) + [Semantic UI](http://semantic-ui.com/) para el front end.
+Utiliza [Node.js](https://nodejs.org/) en el servidor, [Mongo](https://www.mongodb.com/) como base de datos y [Vue.js](https://www.vuejs.org/) + [Semantic UI](https://semantic-ui.com/) para el front end.
 
 Este es el primer proyecto de gran escala que hago en Node, así que si hay algo en mi código que te arda el culito, no seas marica y abre un pull request.
 
 ## Instalación Local
 
-- Instala [Node.js v10](https://nodejs.org/download/release/latest-v10.x/) y [Mongo](https://www.mongodb.com/download-center/community)
+- Instala [Node.js](https://nodejs.org/es/download/) y [Mongo](https://www.mongodb.com/try/download/community)
 - Descarga / Clona el repositorio:
 ```
 git clone --recursive https://github.com/endnch/HispachanFiles.git
@@ -35,7 +35,7 @@ También se puede usar Gulp para actualizar cambios en el código fácilmente. P
 npm install gulp-cli -g
 npm install gulp -D
 ```
-Despues de modificar algo en el código se debe ejecutar lo siguiente en la carpeta raíz de HispachanFiles:
+Después de modificar algo en el código se debe ejecutar lo siguiente en la carpeta raíz de HispachanFiles:
 ```
 gulp build
 ```
@@ -56,5 +56,6 @@ Esta nueva versión de HispaFiles está hecha completamente desde cero, así que
  - [ ] Mejorar la búsqueda de hilos
  - [ ] Mejorar la API
  - [ ] Escribir documentación
+ - [x] Escribir pruebas
 
 Si se te ocurre algo más, o encuentras un bug, puedes [contactarme](mailto:hispafiles@cock.li) o abrir un issue. O incluso mejor, podrías hacer un pull request.
