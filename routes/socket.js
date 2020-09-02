@@ -1,6 +1,6 @@
 'use strict';
 
-const request = require('request');
+const axios = require('axios');
 const urlParse = require('url-parse');
 const cheerio = require('cheerio');
 const thParse = require('../components/parsers/parseThread');
@@ -9,7 +9,7 @@ const archiver = require('../components/archiver/');
 
 module.exports = socket => {
     // Solicitud de almacenamiento de hilo.
-    socket.on('queueThread', url => {
+    socket.on('queueThread', async url => {
         let urlInfo;
         try {
             urlInfo = urlParse(url);
@@ -26,40 +26,43 @@ module.exports = socket => {
             return;
         }
 
-        // Obtener información del thread
-        request(url, (err, res, body) => {
-            try {
-                if (res.statusCode === 404) {
-                    socket.emit('queueFailed', 'El Hilo está en 404.');
-                    return;
-                }
-                if (err) {
-                    socket.emit('queueFailed', 'Se ha producido un error al obtener datos del hilo.');
-                    return;
-                }
-
-                const $ = cheerio.load(body);
-                const threadRaw = $('[id^="thread"]');
-                const thread = thParse(threadRaw, $);
-
-                if (thread.length < 1) {
-                    socket.emit('queueFailed', 'Se ha producido un error al obtener datos del hilo.');
-                    return;
-                }
-
-                // Verificar que el hilo cumpla con los requistos
-                const testResult = thTest(thread);
-                if (testResult) {
-                    socket.emit('queueFailed', testResult);
-                } else {
-                    // Poner el hilo en la cola de guardado
-                    archiver.addToQueue(thread, socket);
-                    socket.emit('queueSuccess', thread);
-                }
-            } catch (e) {
+        // Obtener información del hilo
+        let response = {};
+        try {
+            response = await axios.get(url);
+        } catch ({ response }) {
+            if (response.status === 404) {
+                socket.emit('queueFailed', 'El Hilo está en 404.');
+            } else {
                 socket.emit('queueFailed', 'Se ha producido un error al obtener datos del hilo.');
-                return;
             }
-        });
+            return;
+        }
+
+        const $ = cheerio.load(response.data);
+        const threadRaw = $('[id^="thread"]');
+        const thread = thParse(threadRaw, $);
+
+        if (thread.length < 1) {
+            socket.emit('queueFailed', 'Se ha producido un error al obtener datos del hilo.');
+            return;
+        }
+
+        // Verificar que el hilo cumpla con los requistos
+        const testResult = thTest(thread);
+        if (testResult) {
+            socket.emit('queueFailed', testResult);
+            return;
+        }
+
+        // Poner el hilo en la cola de guardado
+        try {
+            archiver.addToQueue(thread, socket);
+        } catch (e) {
+            socket.emit('queueFailed', 'Se ha producido un error al obtener datos del hilo.');
+            return;
+        }
+
+        socket.emit('queueSuccess', thread);
     });
 };
