@@ -5,18 +5,19 @@ const rimraf = require('rimraf');
 /**
  * Elimina un hilo de la base de datos y todos los archivos relacionados
  *
- * @param {Object} thread
- * @param {Function} callback
+ * @param {Object} thread - El hilo a eliminar
+ * @returns {Promise} Promsesa del resultado
  */
-function deleteThread(thread, callback) {
-    Thread.findOneAndRemove({ postId: thread.postId, board: thread.board }, (err) => {
-        if (err) {
-            callback(err);
-            return;
-        } else {
-            rimraf(`data/${thread.board}/${thread.postId}`, callback);
-        }
+const deleteThread = thread => {
+    return new Promise((resolve, reject) => {
+        Thread.findOneAndRemove({ postId: thread.postId, board: thread.board })
+            .catch(reject);
+
+        rimraf(`data/${thread.board}/${thread.postId}`, e => {
+            if (e) reject(e);
+            resolve();
+        });
     });
-}
+};
 
 module.exports = deleteThread;

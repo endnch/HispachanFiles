@@ -7,7 +7,7 @@ const serverSettings = require('../server-settings');
 const Thread = require('../models/thread');
 const delThread = require('../components/deleteThread');
 
-router.get('/:board/res/:postId', (req, res, next) => {
+router.get('/:board/res/:postId', async (req, res, next) => {
     // CloudFlare server push
     res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
 
@@ -15,47 +15,53 @@ router.get('/:board/res/:postId', (req, res, next) => {
     const board = req.params.board;
 
     // Buscar el hilo en la base de datos
-    Thread.findOne({ board: board, postId: postId }, (err, data) => {
-        err = err || !data;
-        // JSON Solicitado
-        if (typeof req.query.json !== 'undefined') {
-            res.jsonp(!err ? data : { status: 404 });
-            return;
-        }
-        // No existe el hilo / Se ha producido un error
-        if (err) {
-            next();
-            return;
-        }
-        // ZIP Solicitado
-        if (typeof req.query.zip !== 'undefined') {
-            // TBD
-            res.end('La descarga en zip aún no está implementada.');
-            return;
-        }
-        // Renderizar HTML
-        res.render('hispachan/thread', {
-            title: `${data.subject || data.message.substr(0, 30) + '...'} - ${publicSettings.site.title}`,
-            settings: publicSettings,
-            thread: data,
-        });
+    const data = await Thread.findOne({ board: board, postId: postId });
+
+    // JSON Solicitado
+    if (typeof req.query.json !== 'undefined') {
+        res.json(data || { status: 404 });
+        return;
+    }
+    // No existe el hilo
+    if (!data) {
+        next();
+        return;
+    }
+
+    // Renderizar HTML
+    res.render('hispachan/thread', {
+        title: `${data.subject || data.message.substr(0, 30) + '...'} - ${publicSettings.site.title}`,
+        settings: publicSettings,
+        thread: data,
     });
 });
 
 // Eliminar hilos
-router.all('/:board/del/:postId', (req, res) => {
+router.all('/:board/del/:postId', async (req, res) => {
     const key = req.body.key || req.query.key;
     const postId = req.params.postId.split('.')[0];
     const board = req.params.board;
 
-    if (key === serverSettings.delPass) {
-        Thread.findOne({ board: board, postId: postId }, (err, data) => {
-            err = err || !data;
-            if (!err) {
-                delThread(data, e => e ? res.end('Error.') : res.end('Hilo Eliminado.'));
-            } else res.end('El hilo no existe.');
-        });
-    } else res.end('Contraseña Incorrecta.');
+    res.setHeader('content-type', 'text/html; charset=utf-8');
+
+    if (key !== serverSettings.delPass) {
+        res.end('Contraseña Incorrecta.');
+        return;
+    }
+
+    const data = await Thread.findOne({ board: board, postId: postId });
+
+    if (!data) {
+        res.end('El hilo no existe.');
+        return;
+    }
+
+    try { await delThread(data) } catch (e) {
+        res.end('Error.');
+        return;
+    }
+
+    res.end('Hilo eliminado.');
 });
 
 module.exports = router;
