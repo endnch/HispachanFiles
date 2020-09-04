@@ -28,9 +28,6 @@ block content
         .ui.pagination.menu.red.inverted
           each page in pages
             if page.type == 'page'
-              if !currentQuery
-                a(class=page.active?'item active':'item', href='/search?board='+ encodeURIComponent(currentBoard) +'&p='+page.num) #{page.num}
-              else
-                a(class=page.active?'item active':'item', href='/search?q='+ encodeURIComponent(currentQuery) +'&p='+page.num) #{page.num}
+              a(class=page.active?'item active':'item', href='/search?q='+ encodeURIComponent(currentQuery) +'&p='+page.num) #{page.text || page.num}
             if page.type == 'divider'
-              .item.disabled ...
+              .item ...

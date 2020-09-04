@@ -28,6 +28,6 @@ block content
         .ui.pagination.menu.red.inverted
           each page in pages
             if page.type == 'page'
-              a(class=page.active?'item active':'item', href='/all?p='+page.num) #{page.num}
+              a(class=page.active?'item active':'item', href=page.path+'?p='+page.num) #{page.text || page.num}
             if page.type == 'divider'
-              .item.disabled ...
+              .item ...

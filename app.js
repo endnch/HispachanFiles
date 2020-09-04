@@ -26,7 +26,11 @@ const io = socket_io();
 app.io = io;
 
 // Mongoose
-mongoose.connect(serverSettings.db.url);
+if (process.env.NODE_ENV === 'test') {
+    mongoose.connect(serverSettings.db.testUrl);
+} else {
+    mongoose.connect(serverSettings.db.url);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

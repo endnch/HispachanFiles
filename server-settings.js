@@ -12,6 +12,7 @@ module.exports =
     db:
     {
         url: 'mongodb://localhost/hispaFiles',
+        testUrl: 'mongodb://localhost/hispaFilesTest',
     },
 
     /* HTTPS */
