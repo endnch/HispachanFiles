@@ -57,19 +57,18 @@ if (settings.features.apiEnabled) {
 
 io.on('connection', socketRoutes);
 
-// catch 404 and forward to error handler
+// Interceptar 404 y enviarlo al error handler
 app.use((req, res, next) => {
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-// error handlers
-
-app.use((err, req, res) => {
+// Error handler personalizado
+app.use((err, req, res, next) => {
     res.status(err.status || 500);
     if (app.get('env') === 'development') {
-        res.jsonp(err);
+        res.json(err);
     } else {
         res.render('error', {
             title: `Error - ${settings.site.title}`,

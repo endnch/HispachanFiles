@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const publicSettings = require('../settings');
 const Thread = require('../models/thread');
+const boards = require('../boards');
 
 router.get('/ui-search', async (req, res) => {
     const q = req.query.q;
@@ -95,9 +96,16 @@ router.get('/all', async (req, res) => {
     });
 });
 
-router.get('/:board', async (req, res) => {
+router.get('/:board', async (req, res, next) => {
     // CloudFlare server push
     res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
+
+    const allowList = boards.reduce((acc, cur) => [...acc, ...cur]).map(x => x.board);
+
+    if (!allowList.includes(req.params.board)) {
+        next();
+        return;
+    }
 
     const result = await searchThreads({
         board: req.params.board,
