@@ -185,6 +185,8 @@ describe('GET /api/hispachan/m/res/0.html', () => {
 
 describe('GET /api/hispachan/catalog/x', () => {
     test('soportar catalogo de tablones que no existen', async () => {
+        jest.setTimeout(30000);
+
         const response = await api
             .get('/api/hispachan/catalog/x')
             .expect(404)
