@@ -15,7 +15,7 @@ router.get('/ui-search', async (req, res) => {
         return;
     }
 
-    const num = await Thread.count(query);
+    const num = await Thread.countDocuments(query);
     const result = await Thread.find(query).limit(4);
 
     if (result.length > 0) {
@@ -159,16 +159,16 @@ const searchThreads = (search) => {
  */
 const countThreads = (search) => {
     if (search === undefined || Object.keys(search).length === 0) {
-        return Thread.count({});
+        return Thread.estimatedDocumentCount();
     }
 
     if (search.q) {
         const q = search.q;
         const query = { $or: [{ subject: { $regex: q, $options: 'i' } }, { message: { $regex: q, $options: 'i' } }] };
-        return Thread.count(query);
+        return Thread.countDocuments(query);
     }
 
-    return Thread.count({ board: search.board });
+    return Thread.countDocuments({ board: search.board });
 };
 
 /**

@@ -26,11 +26,16 @@ const io = socket_io();
 app.io = io;
 
 // Mongoose
-if (process.env.NODE_ENV === 'test') {
-    mongoose.connect(serverSettings.db.testUrl);
-} else {
-    mongoose.connect(serverSettings.db.url);
-}
+const url = process.env.NODE_ENV === 'test'
+    ? serverSettings.db.testUrl
+    : serverSettings.db.url;
+
+mongoose.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
