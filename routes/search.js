@@ -69,7 +69,7 @@ router.get('/search', async (req, res) => {
     const num = await countThreads({ q });
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
     const pages = generatePagination(p, totalPages);
-    const result = await searchThreads({ q });
+    const result = await searchThreads({ q, p });
 
     res.render('search-results', {
         title: `Resultados de búsqueda ${q} - ${publicSettings.site.title}`,
