@@ -19,9 +19,9 @@ block content
                 | #{item.replyCount}
                 | respuestas.  
                 i.icon.wait
-                | {{'#{item.date}' | moment 'DD/MM/YY HH:mm'}}
+                | {{'#{item.date.toISOString()}' | moment 'DD/MM/YY HH:mm'}}
             .description: p= item.message.substr(0, 256)
-            .extra Archivado por última vez {{'#{item.lastUpdate}' | moment 'DD/MM/YY HH:mm'}}
+            .extra Archivado por última vez {{'#{item.lastUpdate.toISOString()}' | moment 'DD/MM/YY HH:mm'}}
     //- Páginas
     center
       if totalPages > 1

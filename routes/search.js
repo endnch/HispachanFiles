@@ -2,9 +2,10 @@
 
 const express = require('express');
 const router = express.Router();
+const cors = require('cors');
 const publicSettings = require('../settings');
 const Thread = require('../models/thread');
-const boards = require('../boards');
+const { allowList } = require('../boards');
 
 router.get('/ui-search', async (req, res) => {
     const q = req.query.q;
@@ -100,8 +101,6 @@ router.get('/:board', async (req, res, next) => {
     // CloudFlare server push
     res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
 
-    const allowList = boards.reduce((acc, cur) => [...acc, ...cur]).map(x => x.board);
-
     if (!allowList.includes(req.params.board)) {
         next();
         return;
@@ -125,6 +124,55 @@ router.get('/:board', async (req, res, next) => {
         settings: publicSettings,
         totalPages: totalPages, items: result, pages: pages,
     });
+});
+
+router.get('/api/hispafiles/:board/:p?', cors(), async (req, res) => {
+    const board = req.params.board;
+
+    if (!allowList.includes(board)) {
+        res.json([]);
+        return;
+    }
+
+    const query = Thread.find({});
+
+    if (board !== 'all') {
+        query.where('board').equals(board);
+    }
+
+    const p = parseInt(req.params.p || 1);
+    const threads = await query
+        .skip((p - 1) * 10)
+        .limit(10)
+        .sort('-date')
+        .select('-_id -__v -replies');
+
+    const num = board === 'all'
+        ? await countThreads()
+        : await countThreads({ board });
+    const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
+
+    res.json({
+        totalPages,
+        threads,
+    });
+});
+
+router.get('/api/hispafiles/:board/res/:th', cors(), async (req, res) => {
+    const threadId = req.params.th;
+    const board = req.params.board;
+
+    if (!allowList.includes(board)) {
+        res.json([]);
+        return;
+    }
+
+    const thread = await Thread.findOne()
+        .where('board').equals(board)
+        .where('postId').equals(threadId)
+        .select('-_id -__v -replies._id');
+
+    res.json(thread);
 });
 
 /**

@@ -5,7 +5,7 @@ const router = express.Router();
 const marked = require('marked');
 const news = marked(require('fs').readFileSync('news.md', 'utf-8'));
 const publicSettings = require('../settings');
-const boards = require('../boards');
+const { boards } = require('../boards');
 
 router.get('/', (req, res) => {
     // CloudFlare server push

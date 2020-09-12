@@ -5,7 +5,7 @@
  */
 'use strict';
 
-module.exports = [
+const boards = [
     [
         {
             board: 'all',
@@ -195,3 +195,10 @@ module.exports = [
         },
     ],
 ];
+
+const allowList = boards.reduce((acc, cur) => [...acc, ...cur]).map(x => x.board);
+
+module.exports = {
+    boards,
+    allowList,
+};
