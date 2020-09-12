@@ -38,11 +38,16 @@ router.get('/:board/res/:postId', async (req, res, next) => {
 
 // Eliminar hilos
 router.all('/:board/del/:postId', async (req, res) => {
+    res.setHeader('content-type', 'text/html; charset=utf-8');
+
+    if (!publicSettings.features.threadDeletion) {
+        res.end('Función desactivada');
+        return;
+    }
+
     const key = req.body.key || req.query.key;
     const postId = req.params.postId.split('.')[0];
     const board = req.params.board;
-
-    res.setHeader('content-type', 'text/html; charset=utf-8');
 
     if (key !== serverSettings.delPass) {
         res.end('Contraseña Incorrecta.');

@@ -29,6 +29,8 @@ module.exports =
     {
         // Establecer en false para desactivar la búsqueda de hilos
         threadSearch: true,
+        // Establecer en false para desactivar la eliminación de hilos
+        threadDeletion: false,
         // Establecer en false para desactivar la descarga en zip de hilos
         zipDownload: true,
         // Establecer en false para desactivar el acceso externo a la API
