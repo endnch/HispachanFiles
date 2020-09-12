@@ -78,6 +78,10 @@ const boards = [
             title: 'Juegos y Rol',
         },
         {
+            board: 't',
+            title: 'Tecnología',
+        },
+        {
             board: 'tv',
             title: 'Cine y Series',
         },

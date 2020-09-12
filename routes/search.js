@@ -54,7 +54,7 @@ router.get('/search', async (req, res) => {
     res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
 
     const q = req.query.q;
-    const p = parseInt(req.query.p || 1);
+    const p = parseInt(req.query.p) || 1;
 
     // Página en blanco si no hay query
     if (!q) {
@@ -84,7 +84,7 @@ router.get('/all', async (req, res) => {
     // CloudFlare server push
     res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
 
-    const p = parseInt(req.query.p || 1);
+    const p = parseInt(req.query.p) || 1;
     const num = await countThreads();
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
     const pages = generatePagination(p, totalPages, req.path);
@@ -115,7 +115,7 @@ router.get('/:board', async (req, res, next) => {
         board: req.params.board,
     });
 
-    const p = parseInt(req.query.p || 1);
+    const p = parseInt(req.query.p) || 1;
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
     const pages = generatePagination(p, totalPages, req.path);
 
@@ -140,7 +140,7 @@ router.get('/api/hispafiles/:board/:p?', cors(), async (req, res) => {
         query.where('board').equals(board);
     }
 
-    const p = parseInt(req.params.p || 1);
+    const p = parseInt(req.params.p) || 1;
     const threads = await query
         .skip((p - 1) * 10)
         .limit(10)
@@ -159,7 +159,7 @@ router.get('/api/hispafiles/:board/:p?', cors(), async (req, res) => {
 });
 
 router.get('/api/hispafiles/:board/res/:th', cors(), async (req, res) => {
-    const threadId = req.params.th;
+    const threadId = req.params.th.split('.')[0];
     const board = req.params.board;
 
     if (!allowList.includes(board)) {
