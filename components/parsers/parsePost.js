@@ -57,6 +57,11 @@ function postMeta(post) {
         data.mod = true;
     }
 
+    // Guest
+    if (post.find('.postername').first().next().hasClass('guest')) {
+        data.guest = true;
+    }
+
     // Cerrado
     if (post.find('[alt="Cerrado"]').length > 0) {
         data.locked = true;

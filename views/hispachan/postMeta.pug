@@ -23,6 +23,8 @@ label
     span.badge Admin
   if post.mod
     span.badge Mod
+  if post.guest
+    span.badge Guest
   span.timer(v-cloak, title='Hispachan Files siempre muestra la hora local.') &nbsp; {{'#{post.date.toISOString()}' | moment 'DD/MM/YY HH:mm'}}
 //- kek
 .mvisible.reflinkposition

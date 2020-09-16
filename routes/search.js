@@ -163,7 +163,7 @@ router.get('/api/hispafiles/:board/res/:th', cors(), async (req, res) => {
     const board = req.params.board;
 
     if (!allowList.includes(board)) {
-        res.json([]);
+        res.json({});
         return;
     }
 
@@ -171,6 +171,11 @@ router.get('/api/hispafiles/:board/res/:th', cors(), async (req, res) => {
         .where('board').equals(board)
         .where('postId').equals(threadId)
         .select('-_id -__v -replies._id');
+
+    if (!thread) {
+        res.json({});
+        return;
+    }
 
     res.json(thread);
 });
