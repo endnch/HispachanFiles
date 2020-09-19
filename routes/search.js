@@ -126,6 +126,55 @@ router.get('/:board', async (req, res, next) => {
     });
 });
 
+router.get('/api/hispafiles/ui-search/:q', cors(), async (req, res) => {
+    const q = req.params.q;
+
+    const query = { $or: [
+        { subject: { $regex: q, $options: 'i' } },
+        { message: { $regex: q, $options: 'i' } }] };
+
+    const threads = await Thread.find(query)
+        .limit(4)
+        .sort('-date');
+
+    const totalResults = await Thread.countDocuments(query);
+
+    const results = threads.map(thread => ({
+        description: thread.message.substr(0, 120),
+        url: `/${thread.board}/res/${thread.postId}`,
+        title: thread.subject,
+        image: thread.file && '/' + thread.file.thumb,
+    }));
+
+    res.json({
+        totalResults,
+        results,
+    });
+});
+
+router.get('/api/hispafiles/search/:q/:p?', cors(), async (req, res) => {
+    const q = req.params.q;
+    const p = parseInt(req.params.p) || 1;
+
+    const query = { $or: [
+        { subject: { $regex: q, $options: 'i' } },
+        { message: { $regex: q, $options: 'i' } }] };
+
+    const threads = await Thread.find(query)
+        .skip((p - 1) * 10)
+        .limit(10)
+        .sort('-date')
+        .select('-_id -__v -replies');
+
+    const num = await Thread.countDocuments(query);
+    const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
+
+    res.json({
+        totalPages,
+        threads,
+    });
+});
+
 router.get('/api/hispafiles/:board/:p?', cors(), async (req, res) => {
     const board = req.params.board;
 
