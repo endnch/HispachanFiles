@@ -1,13 +1,12 @@
 /**
  * Hispachan Files Front End
  */
-'use strict';
 
 import jQuery from 'jquery';
 import NProgress from 'nprogress';
 import Vue from 'vue';
-import {Archiver, archiverState} from './components/archiver';
-import {Settings, defaultSettings} from './components/settings';
+import { Archiver, archiverState } from './components/archiver';
+import { Settings, defaultSettings } from './components/settings';
 import renderPostMessage from './components/renderer';
 import Thread from './components/thread';
 
@@ -22,70 +21,66 @@ class HispachanFiles {
         this.settings = new Settings(this);
         this.assignEvents();
     }
-    
+
     // Eventos básicos
     assignEvents() {
-        let that = this;
+        const that = this;
         // Clásico
         $(document).ready(() => { that.documentReady() });
         $(window).load(() => { that.documentLoaded() });
     }
 
     documentReady() {
-        let that = this;
-        $('#sideToggle').click(e=> {
+        const that = this;
+        $('#sideToggle').click(() => {
             $('#mainSb').sidebar('toggle');
             return false;
         });
 
         $('#mainTabs .item').tab();
-        
-        $('#saveBtn').click(e=> {
-            if(that.data.archiver.working) return;
-            let archiver = new Archiver(that.data.archiver.url, that);
+
+        $('#saveBtn').click(() => {
+            if (that.data.archiver.working) return;
+            const archiver = new Archiver(that.data.archiver.url, that);
             archiver.start();
-        })
-        
+        });
+
         $('#threadSearch').search({
             apiSettings: {
-                url: '/ui-search?q={query}'
+                url: '/ui-search?q={query}',
             },
-            type: 'standard'
+            type: 'standard',
         });
-        
-        $('#settingsBtn').click(e=>that.settings.showModal());
-        
-        $(document.body).on('click', '#copyBtn', e=> {
-            if(document.queryCommandSupported('copy'))
-            {
+
+        $('#settingsBtn').click(() => that.settings.showModal());
+
+        $(document.body).on('click', '#copyBtn', () => {
+            if (document.queryCommandSupported('copy')) {
                 $('#copyBox').select();
                 document.execCommand('copy');
-            }
-            else
-            {
-                prompt('Tu navegador no soporta el copiado. Pulsa Ctrl+C para copiar manualmente.', $('#copyBox').val())
+            } else {
+                prompt('Tu navegador no soporta el copiado. Pulsa Ctrl+C para copiar manualmente.', $('#copyBox').val());
             }
         });
-        
+
         // Estamos en un Hilo
-        if($('#hispaBox').length)
-        {
-            let hB = $('#hispaBox');
-            let th = new Thread(hB.prop('hf-board'), hB.prop('hf-id'));
+        if ($('#hispaBox').length) {
+            const hB = $('#hispaBox');
+            const th = new Thread(hB.prop('hf-board'), hB.prop('hf-id'));
             this.threadControl = th;
             th.setEvents($);
         }
-        
+
         // Uso Vue para el parseado
         Vue.use(require('vue-moment'));
         Vue.filter('renderPostMessage', renderPostMessage);
-        
+
         this.app = new Vue({
             el: document.body,
             data: this.data,
             created: function () {
                 NProgress.done();
-            }
+            },
         });
     }
 
@@ -109,8 +104,8 @@ class HispachanFiles {
                 if (this.find('video').length > 0) {
                     this.find('video').get(0).pause();
                 }
-            }
-        });        
+            },
+        });
         $('.backlink').click(function() {
             $('.reply').removeClass('highlight');
             $(`#reply${$(this).attr('href').substr(1)}`).addClass('highlight');

@@ -1,15 +1,13 @@
 /**
  * Ayuda a renderizar los mensajes de los posts
  */
-'use strict';
 
-export default function renderPostMessage(text, postId)
-{
+export default function renderPostMessage(text, postId) {
     // texto rojo (diciembre de 2018)
     // Este reemplazo siempre se tiene que ejecutar antes que los demas para que
     // no de problemas con el HTML que se va agregando
-    text = text.replace(/(^[\<]+)([^\n].+)$/gm, function (x, y, z) {
-         return '<span class="redtext">'+y.replace(/</g, "&lt;") + z + '</span>';
+    text = text.replace(/(^[<]+)([^\n].+)$/gm, (x, y, z) => {
+        return '<span class="redtext">' + y.replace(/</g, '&lt;') + z + '</span>';
     });
     // Links
     text = text.replace(/(https?:\/\/[^\s]+)/g, url => `<a target="_blank" href="${url}">${url}</a>`);
@@ -23,10 +21,9 @@ export default function renderPostMessage(text, postId)
     // Code
     text = text.replace(/\[code\]([\s\S]*?)\[\/code\]/g, '<div class="code">$1</div>');
     // Reflinks
-    text = text.replace(/\>\>([r]?[l]?[f]?[q]?[0-9,\-,\,]+)/g, ref => {
-        var rP = ref.substr(2);
-        if($('[name="'+rP+'"]').length)
-        {
+    text = text.replace(/>>([r]?[l]?[f]?[q]?[0-9,\-,,]+)/g, ref => {
+        const rP = ref.substr(2);
+        if ($('[name="' + rP + '"]').length) {
             // Backlinks
             const backlinks = $(`a[name="${rP}"]`).parent().find('blockquote .replybacklinks').first();
             if (!backlinks.find(`a.backlink[href="#${postId}"]`).length) {
@@ -34,18 +31,16 @@ export default function renderPostMessage(text, postId)
                          <div class="ui flowing popup"><i class="notched circle loading icon"></i></div>`);
             }
             return `<a class="backlink" href="#${rP}" data-ref="${rP}">${ref}</a><div class="ui flowing popup"><i class="notched circle loading icon"></i></div>`;
-        }
-        else
-        {
+        } else {
             return `<a class="ref-futura" data-ref="${rP}">${ref}</a>`;
         }
     });
     // textoverde :^)
-    text = text.replace(/(^[\>]+)([^\n].+)$/gm,  function (x, y, z) {
-         return '<span class="unkfunc">'+y.replace(/>/g, "&gt;") + z + '</span>';
+    text = text.replace(/(^[>]+)([^\n].+)$/gm,  (x, y, z) => {
+        return '<span class="unkfunc">' + y.replace(/>/g, '&gt;') + z + '</span>';
     });
     // Saltos de línea
-    text = text.replace(/\n/g, "<br />");
-    
+    text = text.replace(/\n/g, '<br />');
+
     return text;
 }
