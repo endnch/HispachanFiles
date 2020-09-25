@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "feed": "^4.2.1",
     "jquery": "^2.2.3",
+    "lodash.clonedeep": "^4.5.0",
     "marked": "^1.1.1",
     "md5": "^2.3.0",
     "mkdirp": "^1.0.4",

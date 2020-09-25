@@ -3,6 +3,7 @@
 const axios = require('axios');
 const urlParse = require('url-parse');
 const cheerio = require('cheerio');
+const cloneDeep = require('lodash.clonedeep');
 const thParse = require('../components/parsers/parseThread');
 const thTest = require('../components/testThread');
 const archiver = require('../components/archiver/');
@@ -57,7 +58,7 @@ module.exports = socket => {
 
         // Poner el hilo en la cola de guardado
         try {
-            archiver.addToQueue(thread, socket);
+            archiver.addToQueue(cloneDeep(thread), socket);
         } catch (e) {
             socket.emit('queueFailed', 'Se ha producido un error al obtener datos del hilo.');
             return;
