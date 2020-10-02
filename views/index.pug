@@ -40,8 +40,10 @@ block content
                     i.icon.external(style="color:#fff;")
           center(v-show="!archiver.done && archiver.hasData") Puedes cerrar esta ventana. El hilo seguirá en la cola de almacenamiento.
       div(v-else)
+        include components/tlkio
         .ui.top.attached.pointing.secondary.menu#mainTabs
           a.item.active(data-tab='news') Noticias
         .ui.active.tab(data-tab='news')
           div(style='margin: 1em;')
             | !{news}
+      include components/intergram
