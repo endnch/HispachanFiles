@@ -95,7 +95,7 @@ const boards = [
         },
         {
             board: 'z',
-            title: 'Drogas',
+            title: 'Libros y Literatura',
         },
     ],
     [

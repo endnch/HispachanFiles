@@ -1,0 +1,42 @@
+.c-nav-desktop {
+    display: flex;
+    grid-area: nav-desktop;
+    color: $pb-foreground;
+    border: 1px $pb-border solid;
+    border-radius: 5px;
+    padding: 10px 5px 10px 5px;
+    justify-content: space-around;
+
+    @media only screen and (max-width: 764px) {
+        display: none;
+    }
+}
+
+.c-nav-desktop__headline {
+    text-transform: uppercase;
+    font-weight: bold;
+
+     &--nsfw:after {
+        content: 'nsfw';
+        font-size: 70%;
+        font-weight: normal;
+        padding-left: 5px;
+    }
+}
+
+.c-nav-desktop__list {
+    padding-inline-start: 0;
+}
+
+.c-nav-desktop__item {
+    list-style: none;
+}
+
+.c-nav-desktop__board-code {
+    font-size: 85%;
+    padding-left: 5px;
+}
+
+.c-nav-desktop__flag {
+    padding-right: 5px;
+}

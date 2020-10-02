@@ -1,0 +1,9 @@
+.c-nav-mobile {
+    grid-area: nav-mobile;
+    background: $pb-background !important;
+    color: $bg-accent !important;
+
+    @media only screen and (min-width: 764px) {
+        display: none;
+    }
+}

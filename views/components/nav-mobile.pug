@@ -1,0 +1,8 @@
+.ui.segment.c-nav-mobile
+  each group in boards
+    | [ 
+    each board, index in group
+      a(href='/'+board.board, title=board.title) #{board.board=='all'?board.title:board.board} 
+      if index != group.length - 1
+        | / 
+    | ] 

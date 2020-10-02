@@ -2,6 +2,10 @@
  * Hispachan Files
  */
 
+ @import 'components/c-container';
+ @import 'components/c-nav-desktop';
+ @import 'components/c-nav-mobile';
+ 
 #mainMenu
 {
     background: $bg-accent;
@@ -121,15 +125,4 @@ h1, h2, h3, h4, h5
 .ui.attached.menu
 {
     border: none!important;
-}
-
-#navbar
-{
-    background: $pb-background;
-    color: $pb-foreground;
-}
-
-#navbar a
-{
-    color: $link-color;
 }
