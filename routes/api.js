@@ -5,6 +5,7 @@ const router = express.Router();
 
 const hispafiles = require('./api/hispafiles');
 const hispachan = require('./api/hispachan');
+const hispasexy = require('./api/hispasexy');
 
 const publicSettings = require('../settings');
 
@@ -19,5 +20,6 @@ router.get('/', (req, res) => {
 
 router.use('/hispafiles', hispafiles);
 router.use('/hispachan', hispachan);
+router.use('/hispasexy', hispasexy);
 
 module.exports = router;

@@ -8,10 +8,10 @@ block content
     .c-container__main
       h1.c-container__main-headline
         | #{settings.site.title} permite guardar hilos de 
-        a(href='https://www.hispachan.org/') hispachan.org
+        a(href='https://www.'+settings.target+'.org/') #{settings.target}.org
         |.
       .ui.icon.input(style='width: 100%;', v-bind:class='archiver.working ? ["disabled", "loading"] : []')
-        input(placeholder='Introduce una URL de Hispachan', type='text', v-model='archiver.url', :disabled='archiver.working')
+        input(placeholder='Introduce una URL de '+capitalize(settings.target), type='text', v-model='archiver.url', :disabled='archiver.working')
         i.icon.save.link#saveBtn(v-bind:class='archiver.working ? [] : ["inverted", "circular"]')              
       div(v-cloak, v-show='archiver.started', style='margin-top: 2em;')
         .ui.active.progress#archiverProgress

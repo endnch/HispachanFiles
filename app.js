@@ -18,6 +18,7 @@ const searchRoutes = require('./routes/search');
 
 const settings = require('./settings');
 const serverSettings = require('./server-settings');
+const capitalize = require('./utils/capitalize');
 
 const app = express();
 
@@ -52,6 +53,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
+app.use((req, res, next) => {
+    res.locals.capitalize = capitalize;
+    next();
+});
 
 app.use('/', routes);
 app.use('/', threadRoutes);

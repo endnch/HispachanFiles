@@ -8,7 +8,8 @@
 
 module.exports =
 {
-
+    /* Sitio a archivar (hispachan o hispasexy) */
+    target: 'hispachan',
     /* Configuración del sitio */
     site:
     {

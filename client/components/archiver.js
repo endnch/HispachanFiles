@@ -5,6 +5,7 @@
 import io from 'socket.io-client';
 import urlParse from 'url-parse';
 import settings from '../../settings';
+import capitalize from '../../utils/capitalize';
 
 export class Archiver {
     constructor(url, parent) {
@@ -70,8 +71,8 @@ export class Archiver {
     // Verifica localmente la URL, para evitar cargar innecesariamente el servidor
     checkUrl() {
         const url = urlParse(this.url);
-        if (url.hostname !== 'www.hispachan.org') {
-            return 'Esta URL no pertenece a Hispachan ni a Hispachan Files';
+        if (url.hostname !== `www.${settings.target}.org`) {
+            return `Esta URL no pertenece a ${capitalize(settings.target)} ni a Hispachan Files`;
         }
         if (!/\/(.+)\/res\/(\d+)(\.html)?/.test(url.pathname)) {
             return 'Esta URL no pertenece a ningún hilo.';

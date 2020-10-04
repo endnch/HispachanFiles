@@ -11,32 +11,32 @@ block content
     pre= settings.site.url + '/g/res/2259040.html?json'
     br
     br
-    h1 API no-oficial de Hispachan
+    h1 API no-oficial de #{capitalize(settings.target)}
     br
-    p Esta API funciona parseando el HTML de Hispachan para convertirlo en JSON.
+    p Esta API funciona parseando el HTML de #{capitalize(settings.target)} para convertirlo en JSON.
     p Se encuentra en una etapa temprana de desarrollo, así que úsala bajo tu propio riesgo.
     p Durante el proceso de almacenamiento de un hilo, #{settings.site.title} utiliza las mismas librerías para parsear los hilos.
     br
     h2 ¿Qué se puede hacer de momento?
     h4 Obtener un listado completo de tablones
-    pre #{settings.site.url}/api/hispachan/
+    pre #{settings.site.url}/api/#{settings.target}/
     h4 Obtener el contenido de los hilos en JSON
-    pre #{settings.site.url}/api/hispachan/{board}/res/{id}.html
+    pre #{settings.site.url}/api/#{settings.target}/{board}/res/{id}.html
     p(style="opacity:.5") (.html es opcional)
     p Parsea un hilo entero y regresa su contenido y metadatos en formato JSON.
     h4 Obtener las páginas de los tablones en JSON
-    pre #{settings.site.url}/api/hispachan/{board}/{pagina}.html
+    pre #{settings.site.url}/api/#{settings.target}/{board}/{pagina}.html
     p(style="opacity:.5") (.html es opcional, si no se específica {pagina}, se obtendrá la página 0)
     p Parsea una página de board entera, incluyendo las 3 últimas respuestas de cada hilo y sus respectivos metadatos
     h4 Obtener el catálogo de los tablones
-    pre #{settings.site.url}/api/hispachan/catalog/{board}/
+    pre #{settings.site.url}/api/#{settings.target}/catalog/{board}/
     p Parsea todas las páginas de un tablón
     br
     h2 ¿Qué se podrá hacer en un futuro?
-    h4 Acceso a las estadísticas públicas de Hispachan
+    h4 Acceso a las estadísticas públicas de #{capitalize(settings.target)}
     h4 Búsqueda de hilos
     p Postear cosas directamente desde la API no está planificado (y probablemente nunca lo esté) por motivos de seguridad.
-    p Si pretendes hacer una app que no sea sólo para lurkear, deberás hacer los posts directamente al servidor de Hispachan.
+    p Si pretendes hacer una app que no sea sólo para lurkear, deberás hacer los posts directamente al servidor de #{capitalize(settings.target)}.
     p Quizá mirando el código de Kusaba X se te haga un poco mas sencillo.
     br
     br

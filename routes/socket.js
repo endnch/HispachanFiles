@@ -7,6 +7,8 @@ const cloneDeep = require('lodash.clonedeep');
 const thParse = require('../components/parsers/parseThread');
 const thTest = require('../components/testThread');
 const archiver = require('../components/archiver/');
+const capitalize = require('../utils/capitalize');
+const settings = require('../settings');
 
 module.exports = socket => {
     // Solicitud de almacenamiento de hilo.
@@ -18,8 +20,8 @@ module.exports = socket => {
             socket.emit('queueFailed', 'URL Inválida');
             return;
         }
-        if (urlInfo.hostname !== 'www.hispachan.org') {
-            socket.emit('queueFailed', 'Esta URL no pertenece a Hispachan ni a Hispachan Files');
+        if (urlInfo.hostname !== `www.${settings.target}.org`) {
+            socket.emit('queueFailed', `Esta URL no pertenece a ${capitalize(settings.target)} ni a Hispachan File`);
             return;
         }
         if (!/\/(.+)\/res\/(\d+)(\.html)?/.test(urlInfo.pathname)) {
