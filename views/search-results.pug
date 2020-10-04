@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  include components/ads/search-results
   .ui.container
     h1 Resultados de la búsqueda #{currentQuery}
     if items.length < 1

@@ -14,6 +14,7 @@ block metaTags
   meta(name='twitter:description', content=thread.message.substr(0,147)+'...')
   meta(name='twitter:image', content=thread.file.url)
 block content
+  include ../components/ads/thread
   .v-loading(v-cloak)
     br
     center: h1 (...)
