@@ -2,22 +2,25 @@
 
 const express = require('express');
 const router = express.Router();
+const querystring = require('querystring');
 const publicSettings = require('../settings');
-const Thread = require('../models/thread');
+const Post = require('../models/post');
 const { allowList } = require('../boards');
 const { generatePagination } = require('./utils');
+const renderer = require('../utils/renderer');
+
 
 router.get('/ui-search', async (req, res) => {
     const q = req.query.q;
-    const query = { $or: [{ subject: { $regex: q, $options: 'i' } }, { message: { $regex: q, $options: 'i' } }] };
+    const query = { thread: null, $or: [{ subject: { $regex: q, $options: 'i' } }, { message: { $regex: q, $options: 'i' } }] };
 
     if (!q) {
         res.json({ results: [] });
         return;
     }
 
-    const num = await Thread.countDocuments(query);
-    const result = await Thread.find(query).limit(4);
+    const num = await Post.countDocuments(query);
+    const result = await Post.find(query).limit(4);
 
     if (result.length > 0) {
         const response = { results: [] };
@@ -55,32 +58,53 @@ router.get('/search', async (req, res) => {
 
     const q = req.query.q;
     const p = parseInt(req.query.p) || 1;
-    const query = { $or: [
-        { subject: { $regex: q, $options: 'i' } },
-        { message: { $regex: q, $options: 'i' } }] };
+    const query = {};
 
-    // Página en blanco si no hay query
-    if (!q) {
-        res.render('search-results', {
-            title: `Resultados de búsqueda: ${q} - ${publicSettings.site.title}`,
-            settings: publicSettings,
-            currentQuery: q, totalPages: 1, items: [], pages: [],
-        });
-        return;
+    if (q) {
+        query.$or = [
+            { subject: { $regex: q, $options: 'i' } },
+            { message: { $regex: q, $options: 'i' } },
+        ];
     }
 
-    const num = await Thread.countDocuments(query);
+    if (req.query.op === 'true') {
+        query.thread = null;
+    }
+
+    if (req.query.extensions) {
+        if (req.query.extensions.includes('mp4')) {
+            query.file = { $exists: true };
+            query['file.url'] = query['file.url'] || { $in: [] };
+            query['file.url'].$in.push(/\.mp4$/);
+        }
+        if (req.query.extensions.includes('webm')) {
+            query.file = { $exists: true };
+            query['file.url'] = query['file.url'] || { $in: [] };
+            query['file.url'].$in.push(/\.webm$/);
+        }
+        if (req.query.extensions.includes('img')) {
+            query.file = { $exists: true };
+            query['file.url'] = query['file.url'] || { $in: [] };
+            query['file.url'].$in.push(/\.jpg$/, /\.png$/, /\.gif$/);
+        }
+    }
+
+    const num = await Post.countDocuments(query);
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
     const pages = generatePagination(p, totalPages);
-    const items = await Thread.find(query)
+    const items = await Post.find(query)
         .skip((p - 1) * 10)
         .limit(10)
-        .sort('-date');
+        .sort('-date')
+        .populate('thread');
+
+    const { p: _p, ...queryObject } = req.query;
+    const currentQuery = querystring.stringify(queryObject);
 
     res.render('search-results', {
         title: `Resultados de búsqueda ${q} - ${publicSettings.site.title}`,
         settings: publicSettings,
-        currentQuery: q, totalPages, items, pages,
+        q, currentQuery, totalPages, items, pages, renderer,
     });
 });
 
@@ -95,7 +119,7 @@ router.get('/:board', async (req, res, next) => {
         return;
     }
 
-    const query = Thread.find({});
+    const query = Post.find({});
 
     if (board !== 'all') {
         query.where('board').equals(board);
@@ -103,13 +127,14 @@ router.get('/:board', async (req, res, next) => {
 
     const p = parseInt(req.query.p) || 1;
     const items = await query
+        .where('thread').equals(null)
         .skip((p - 1) * 10)
         .limit(10)
         .sort('-date');
 
     const num = board === 'all'
-        ? await Thread.estimatedDocumentCount()
-        : await Thread.countDocuments({ board });
+        ? await Post.countDocuments({ thread: null })
+        : await Post.countDocuments({ board, thread: null });
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
     const pages = generatePagination(p, totalPages, req.path);
 

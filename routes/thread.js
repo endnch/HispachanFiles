@@ -4,8 +4,8 @@ const express = require('express');
 const router = express.Router();
 const publicSettings = require('../settings');
 const serverSettings = require('../server-settings');
-const Thread = require('../models/thread');
-const delThread = require('../components/deleteThread');
+const Post = require('../models/post');
+const deletePost = require('../components/deletePost');
 
 router.get('/:board/res/:postId', async (req, res, next) => {
     // CloudFlare server push
@@ -15,7 +15,7 @@ router.get('/:board/res/:postId', async (req, res, next) => {
     const board = req.params.board;
 
     // Buscar el hilo en la base de datos
-    const data = await Thread.findOne({ board: board, postId: postId });
+    const data = await Post.findOne({ board: board, postId: postId, thread: null }).populate('replies');
 
     // JSON Solicitado
     if (typeof req.query.json !== 'undefined') {
@@ -36,7 +36,7 @@ router.get('/:board/res/:postId', async (req, res, next) => {
     });
 });
 
-// Eliminar hilos
+// Eliminar posts
 router.all('/:board/del/:postId', async (req, res) => {
     res.setHeader('content-type', 'text/html; charset=utf-8');
 
@@ -54,19 +54,22 @@ router.all('/:board/del/:postId', async (req, res) => {
         return;
     }
 
-    const data = await Thread.findOne({ board: board, postId: postId });
+    const post = await Post.findOne({ board, postId })
+        .populate('thread')
+        .populate('replies')
+        .lean();
 
-    if (!data) {
-        res.end('El hilo no existe.');
+    if (!post) {
+        res.end('El post no existe.');
         return;
     }
 
-    try { await delThread(data) } catch (e) {
+    try { await deletePost(post) } catch (e) {
         res.end('Error.');
         return;
     }
 
-    res.end('Hilo eliminado.');
+    res.end('Post eliminado.');
 });
 
 module.exports = router;
