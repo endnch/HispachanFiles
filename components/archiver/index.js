@@ -87,12 +87,29 @@ class Archiver {
 
         if (!fs.existsSync(thumbPath)) {
             // Descargar thumb
-            const response = await axios.get(post.file.thumb, { responseType: 'stream' });
-            await new Promise((resolve, reject) => {
-                response.data.pipe(fs.createWriteStream(thumbPath))
-                    .on('error', error => { reject(error) })
-                    .on('finish', () => { resolve() });
-            });
+            try {
+                const response = await axios.get(post.file.thumb, { responseType: 'stream' });
+
+                await new Promise((resolve, reject) => {
+                    response.data.pipe(fs.createWriteStream(thumbPath))
+                        .on('error', error => { reject(error) })
+                        .on('finish', () => { resolve() });
+                });
+            } catch (error) {
+                if (!(error.response && error.response.status === 404)) {
+                    throw new Error(error);
+                }
+
+                // Esto es un hack
+                // Hace falta hacer el parseado de hilos con un headless browser
+                const response = await axios.get('https://www.hispachan.org/buttons/previewerror.png', { responseType: 'stream' });
+
+                await new Promise((resolve, reject) => {
+                    response.data.pipe(fs.createWriteStream(thumbPath))
+                        .on('error', error => { reject(error) })
+                        .on('finish', () => { resolve() });
+                });
+            }
         }
         // Establecer nueva ubicación
         post.file.thumb = thumbPath;
