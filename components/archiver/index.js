@@ -132,7 +132,7 @@ class Archiver {
 
         if (!fs.existsSync(filePath)) {
             // Descargar archivo
-            const response = await axios.get(post.file.url, { responseType: 'stream' });
+            const response = await axios.get(encodeURI(post.file.url), { responseType: 'stream' });
             await new Promise((resolve, reject) => {
                 response.data.pipe(fs.createWriteStream(filePath))
                     .on('error', error => { reject(error) })
