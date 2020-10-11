@@ -7,6 +7,11 @@ block content
       form.ui.form
         .field
           input(name='q', type='text', placeholder='Termino de búsqueda')
+        .field
+          label Solo buscar en los siguientes tablones
+          select.ui.dropdown(multiple, name='boards')
+            each board in allowList
+              option(value=board)= board
         .inline.fields
           label Solo OPs
           .field

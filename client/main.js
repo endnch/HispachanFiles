@@ -110,7 +110,7 @@ class HispachanFiles {
             $('.reply').removeClass('highlight');
             $(`#reply${$(this).attr('href').substr(1)}`).addClass('highlight');
         });
-        $('.ui.checkbox').checkbox();
+        $('.ui.dropdown').dropdown();
     }
 }
 

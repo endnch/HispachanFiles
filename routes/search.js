@@ -89,6 +89,10 @@ router.get('/search', async (req, res) => {
         }
     }
 
+    if (req.query.boards) {
+        query.board = { $in: req.query.boards };
+    }
+
     const num = await Post.countDocuments(query);
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
     const pages = generatePagination(p, totalPages);
@@ -104,6 +108,7 @@ router.get('/search', async (req, res) => {
     res.render('search-results', {
         title: `Resultados de búsqueda ${q} - ${publicSettings.site.title}`,
         settings: publicSettings,
+        allowList: allowList.filter(x => x !== 'all'),
         q, currentQuery, totalPages, items, pages, renderer,
     });
 });
