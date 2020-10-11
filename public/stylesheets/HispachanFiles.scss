@@ -5,6 +5,10 @@
  @import 'components/c-container';
  @import 'components/c-nav-desktop';
  @import 'components/c-nav-mobile';
+
+.flex {
+    display: flex;
+}
  
 #mainMenu
 {

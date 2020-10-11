@@ -3,32 +3,57 @@ extends layout
 block content
   include components/ads/search-results
   .ui.container
-    h1 Resultados de la búsqueda #{currentQuery}
+    .ui.segment
+      form.ui.form
+        .field
+          input(name='q', type='text', placeholder='Termino de búsqueda')
+        .inline.fields
+          label Solo OPs
+          .field
+            .ui.toggle.checkbox
+              input(name='op', value='true', type='checkbox')
+        .inline.fields
+          label Solo posts con archivos
+          .field
+            .ui.toggle.checkbox
+              input(name='extensions', value='mp4', type='checkbox')
+              label mp4
+          .field
+            .ui.toggle.checkbox
+              input(name='extensions', value='webm', type='checkbox')
+              label webm
+          .field
+            .ui.toggle.checkbox
+              input(name='extensions', value='img', type='checkbox')
+              label jpg/png/gif
+        button.ui.button(type='submit') Buscar
+    h1 Resultados de la búsqueda: #{q}
     if items.length < 1
       center: h2 No hay resultados
-    .ui.items#searchResults(ng-cloak)
+    .ui.items#hispaBox
       each item in items
-        a.item(href='/'+item.board+'/res/'+item.postId+'.html')
-          .image
-            if item.file.thumb
-              img(src=item.file.thumb)
-          .content
-            .header= item.subject
-            .meta
-              span
-                i.icon.comments
-                | #{item.replyCount}
-                | respuestas.  
-                i.icon.wait
-                | {{'#{item.date.toISOString()}' | moment 'DD/MM/YY HH:mm'}}
-            .description: p= item.message.substr(0, 256)
-            .extra Archivado por última vez {{'#{item.lastUpdate.toISOString()}' | moment 'DD/MM/YY HH:mm'}}
+        - var thread = item.thread ? item.thread.postId : item.postId
+        a(href='/'+item.board+'/res/'+thread+'.html#'+item.postId)
+          .reply(style='margin: 10px 0;')
+            div
+              label
+                span.filetitle= item.subject
+                span.postername
+                  |  #{item.posterName}
+                span.timer 
+                  |  {{'#{item.date.toISOString()}' | moment 'DD/MM/YY HH:mm'}}
+                span
+                  |  /#/ #{item.postId}
+            .flex
+              if item.file.thumb
+                img(src=item.file.thumb)
+              blockquote !{renderer(item.message)}
     //- Páginas
     center
       if totalPages > 1
         .ui.pagination.menu.red.inverted
           each page in pages
             if page.type == 'page'
-              a(class=page.active?'item active':'item', href='/search?q='+ encodeURIComponent(currentQuery) +'&p='+page.num) #{page.text || page.num}
+              a(class=page.active?'item active':'item', href='/search?'+currentQuery+'&p='+page.num) #{page.text || page.num}
             if page.type == 'divider'
               .item ...

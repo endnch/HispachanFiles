@@ -10,7 +10,7 @@ const fs       = require('fs');
 const md5      = require('md5');
 const axios    = require('axios');
 
-const Thread   = require('../../models/thread');
+const Post     = require('../../models/post');
 
 class Archiver {
     constructor() {
@@ -35,29 +35,41 @@ class Archiver {
     // Archivar Hilo
     async start() {
         const thread = this.current;
+        const replies = thread.data.replies;
+        delete thread.data.replies;
         // Establecer directorios para los datos del hilo
         thread.dataDir = `data/${thread.data.board}/${thread.data.postId}/`;
         thread.fileDir = thread.dataDir + 'src/';
         thread.thumbDir = thread.dataDir + 'thumb/';
         thread.saved = 0;
 
-        // Almacenar todas las imágenes
-        for (const reply of thread.data.replies) {
+        const query = { postId: thread.data.postId, board: thread.data.board };
+        const threadDoc = await Post.findOneAndUpdate(query, thread.data, { upsert: true, new: true });
+        threadDoc.replies = [];
+
+        // Almacenar todas las respuestas
+        for (const reply of replies) {
+            reply.board = threadDoc.board;
+            reply.thread = threadDoc;
+            const query = { postId: reply.postId, board: reply.board };
+            const replyDoc = await Post.findOneAndUpdate(query, reply, { upsert: true, new: true });
+            threadDoc.replies.push(replyDoc);
+
             if (reply.file) {
-                await this.storeAttachment(reply);
+                await this.storeAttachment(replyDoc);
             }
+
             this.reportProgress('Guardando archivos...', ++thread.saved, thread.data.replyCount + 1);
         }
 
         // Almacenar imagen de OP
         if (thread.data.file) {
-            await this.storeAttachment(thread.data);
+            await this.storeAttachment(threadDoc);
         }
 
         // Almacenar en la base de datos
-        const query = { 'postId': thread.data.postId, 'board': thread.data.board };
-        thread.data.lastUpdate = Date.now();
-        await Thread.findOneAndUpdate(query, thread.data, { upsert: true });
+        threadDoc.lastUpdate = Date.now();
+        await threadDoc.save();
 
         // Reportar al navegador
         if (this.current.by.connected) {
@@ -130,6 +142,8 @@ class Archiver {
         }
         // Establecer nueva ubicación
         post.file.url = filePath;
+
+        await post.save();
     }
 }
 

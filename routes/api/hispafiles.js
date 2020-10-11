@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 
-const Thread = require('../../models/thread');
+const Post = require('../../models/post');
 const { allowList } = require('../../boards');
 
 router.use(cors());
@@ -12,15 +12,19 @@ router.use(cors());
 router.get('/ui-search/:q', async (req, res) => {
     const q = req.params.q;
 
-    const query = { $or: [
-        { subject: { $regex: q, $options: 'i' } },
-        { message: { $regex: q, $options: 'i' } }] };
+    const query = {
+        thread: null,
+        $or: [
+            { subject: { $regex: q, $options: 'i' } },
+            { message: { $regex: q, $options: 'i' } },
+        ],
+    };
 
-    const threads = await Thread.find(query)
+    const threads = await Post.find(query)
         .limit(4)
         .sort('-date');
 
-    const totalResults = await Thread.countDocuments(query);
+    const totalResults = await Post.countDocuments(query);
 
     const results = threads.map(thread => ({
         description: thread.message.substr(0, 120),
@@ -39,17 +43,21 @@ router.get('/search/:q/:p?', async (req, res) => {
     const q = req.params.q;
     const p = parseInt(req.params.p) || 1;
 
-    const query = { $or: [
-        { subject: { $regex: q, $options: 'i' } },
-        { message: { $regex: q, $options: 'i' } }] };
+    const query = {
+        thread: null,
+        $or: [
+            { subject: { $regex: q, $options: 'i' } },
+            { message: { $regex: q, $options: 'i' } },
+        ],
+    };
 
-    const threads = await Thread.find(query)
+    const threads = await Post.find(query)
         .skip((p - 1) * 10)
         .limit(10)
         .sort('-date')
         .select('-_id -__v -replies');
 
-    const num = await Thread.countDocuments(query);
+    const num = await Post.countDocuments(query);
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
 
     res.json({
@@ -66,7 +74,7 @@ router.get('/:board/:p?', async (req, res) => {
         return;
     }
 
-    const query = Thread.find({});
+    const query = Post.find({ thread: null });
 
     if (board !== 'all') {
         query.where('board').equals(board);
@@ -80,8 +88,8 @@ router.get('/:board/:p?', async (req, res) => {
         .select('-_id -__v -replies');
 
     const num = board === 'all'
-        ? await Thread.estimatedDocumentCount()
-        : await Thread.countDocuments({ board });
+        ? await Post.countDocuments({ thread: null })
+        : await Post.countDocuments({ board });
     const totalPages = Math.floor(num / 10) + (num % 10 ? 1 : 0);
 
     res.json({
@@ -99,10 +107,11 @@ router.get('/:board/res/:th', async (req, res) => {
         return;
     }
 
-    const thread = await Thread.findOne()
+    const thread = await Post.findOne({ thread: null })
         .where('board').equals(board)
         .where('postId').equals(threadId)
-        .select('-_id -__v -replies._id');
+        .populate('replies', '-_id -__v -replies')
+        .select('-_id -__v');
 
     if (!thread) {
         res.json({});
