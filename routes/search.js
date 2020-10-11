@@ -87,6 +87,11 @@ router.get('/search', async (req, res) => {
             query['file.url'] = query['file.url'] || { $in: [] };
             query['file.url'].$in.push(/\.jpg$/, /\.png$/, /\.gif$/);
         }
+        if (req.query.extensions.includes('pdf')) {
+            query.file = { $exists: true };
+            query['file.url'] = query['file.url'] || { $in: [] };
+            query['file.url'].$in.push(/\.pdf$/);
+        }
     }
 
     if (req.query.boards) {

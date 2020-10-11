@@ -31,6 +31,10 @@ block content
             .ui.toggle.checkbox
               input(name='extensions', value='img', type='checkbox')
               label jpg/png/gif
+          .field
+            .ui.toggle.checkbox
+              input(name='extensions', value='pdf', type='checkbox')
+              label pdf
         button.ui.button(type='submit') Buscar
     h1 Resultados de la búsqueda: #{q}
     if items.length < 1
