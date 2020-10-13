@@ -200,9 +200,7 @@ const boards = [
     ],
 ];
 
-const allowList = boards.reduce((acc, cur) => [...acc, ...cur]).map(x => x.board);
-
 module.exports = {
     boards,
-    allowList,
+    allowList: boards.flat().map(x => x.board),
 };
