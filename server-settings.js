@@ -7,7 +7,6 @@
 
 module.exports =
 {
-
     /* Base de datos */
     db:
     {
@@ -30,4 +29,10 @@ module.exports =
 
     /* Clave para borrado de hilos (esto es temporal) */
     delPass: 'zetaputo',
+
+    /* Sentry */
+    sentry: {
+        enabled: false,
+        dsn: '',
+    },
 };

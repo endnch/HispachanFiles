@@ -1,10 +1,9 @@
-//- The good ol' 404
 extends layout
 
 block content
   center
     img(src='/images/404.png')
     if(error.status)
-      h1 /#{error.status}/
+      h1 /#{error.status}/ - #{error.message}
     else
-      h1 Se ha producido un error.
+      h1 #{error.message}
