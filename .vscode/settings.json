@@ -4,5 +4,6 @@
 		"**/.git": true,
 		"**/.DS_Store": true,
         "**/dist": true
-	}
+	},
+	"files.eol": "\n",
 }
