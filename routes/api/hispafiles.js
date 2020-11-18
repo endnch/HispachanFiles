@@ -107,7 +107,7 @@ router.get('/:board/res/:th', async (req, res) => {
         return;
     }
 
-    const thread = await Post.findOne({ thread: null })
+    const thread = await Post.findOne()
         .where('board').equals(board)
         .where('postId').equals(threadId)
         .populate('replies', '-_id -__v -replies')
