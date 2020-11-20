@@ -18,6 +18,10 @@ const boards = [
             title: 'Anime y Manga',
         },
         {
+            board: 'b',
+            title: 'Balcón',
+        },
+        {
             board: 'ac',
             title: 'Animación y Cómics',
         },
@@ -160,6 +164,14 @@ const boards = [
         {
             board: 'h',
             title: 'Hentai',
+        },
+        {
+            board: 'ha',
+            title: 'Hentai Alternativo',
+        },
+        {
+            board: 'sc',
+            title: 'Sexy Cartoons',
         },
         {
             board: 'o',
