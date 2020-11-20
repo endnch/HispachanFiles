@@ -14,28 +14,8 @@ const boards = [
     ],
     [
         {
-            board: 'a',
-            title: 'Anime y Manga',
-        },
-        {
-            board: 'b',
-            title: 'Balcón',
-        },
-        {
-            board: 'ac',
-            title: 'Animación y Cómics',
-        },
-        {
             board: 'c',
             title: 'Ciencia',
-        },
-        {
-            board: 'ch',
-            title: 'Historias y Consejos',
-        },
-        {
-            board: 'di',
-            title: 'Dibujo y Arte',
         },
         {
             board: 'f',
@@ -50,24 +30,12 @@ const boards = [
             title: 'Humanidades',
         },
         {
-            board: 'i',
-            title: 'Adictos a Internet',
-        },
-        {
             board: 'k',
             title: 'Economía',
         },
         {
             board: 'm',
             title: 'Meta',
-        },
-        {
-            board: 'mu',
-            title: 'Música',
-        },
-        {
-            board: 'p',
-            title: 'Deportes',
         },
         {
             board: 'pol',
@@ -78,12 +46,50 @@ const boards = [
             title: 'LGBT+',
         },
         {
-            board: 'r',
-            title: 'Juegos y Rol',
-        },
-        {
             board: 't',
             title: 'Tecnología',
+        },
+        {
+            board: 'z',
+            title: 'Fotografía y Edición',
+        },
+    ],
+    [
+        {
+            board: 'a',
+            title: 'Anime y Manga',
+        },
+        {
+            board: 'b',
+            title: 'Balcón',
+        },
+        {
+            board: 'ac',
+            title: 'Animación y Cómics',
+        },
+        {
+            board: 'ch',
+            title: 'Historias y Consejos',
+        },
+        {
+            board: 'di',
+            title: 'Dibujo y Arte',
+        },
+        {
+            board: 'i',
+            title: 'Adictos a Internet',
+        },
+        {
+            board: 'mu',
+            title: 'Música',
+        },
+        {
+            board: 'p',
+            title: 'Deportes',
+        },
+        {
+            board: 'r',
+            title: 'Juegos y Rol',
         },
         {
             board: 'tv',
@@ -96,10 +102,6 @@ const boards = [
         {
             board: 'w',
             title: 'Videos',
-        },
-        {
-            board: 'z',
-            title: 'Libros y Literatura',
         },
     ],
     [
