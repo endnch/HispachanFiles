@@ -61,7 +61,7 @@ block content
     //- Páginas
     center
       if totalPages > 1
-        .ui.pagination.menu.red.inverted
+        .ui.pagination.menu.inverted
           each page in pages
             if page.type == 'page'
               a(class=page.active?'item active':'item', href='/search?'+currentQuery+'&p='+page.num) #{page.text || page.num}
