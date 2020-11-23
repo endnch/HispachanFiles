@@ -8,58 +8,66 @@ export default class Thread {
         this.postId = id;
     }
 
-    // Expandir Imágenes
-    // TODO: Expandir WEBM
-    expandThumb(imgEl) {
-        const expandUrl = $(imgEl).parent().parent().prop('href');
+    expandThumb(event) {
+        event.preventDefault();
+        const imgEl = event.currentTarget;
+        const imgParent = imgEl.parentElement.parentElement;
+        const expandUrl = imgParent.href;
+
         if (expandUrl.substr(-3) === 'pdf') return;
         if (expandUrl.substr(-3) === 'swf') return;
         if (expandUrl.substr(-3) === 'mp4' || expandUrl.substr(-4) === 'webm') {
-            const video = $(`<video controls autoplay name="media"><source src="${expandUrl}"></video>`);
-            const image = $(imgEl);
-            image.parent().parent().after(video);
-            $(video).css({
-                'max-width': '98%',
-                'max-height': '70%',
-                'margin': '2px 20px 10px',
-            });
-            image.hide();
-            const closeButton = $('<a href="#" class="cerr">[Cerrar]</a>');
-            image.parent().parent().prev().before(closeButton);
-            closeButton.click(() => {
+            const video = document.createElement('video');
+            video.controls = true;
+            video.autoplay = true;
+            video.name = 'media';
+            video.style.maxWidth = '98%';
+            video.style.maxHeight = '70%';
+            video.style.margin = '2px 20px 10px';
+
+            const source = document.createElement('source');
+            source.src = expandUrl;
+            video.appendChild(source);
+
+            imgEl.style.display = 'none';
+            imgParent.insertAdjacentElement('afterend', video);
+
+            const closeButton = document.createElement('a');
+            closeButton.href = '#';
+            closeButton.classList.add('cerr');
+            closeButton.innerText = '[Cerrar]';
+            imgParent.previousElementSibling.insertAdjacentElement('beforebegin', closeButton);
+            closeButton.addEventListener('click', (event) => {
+                event.preventDefault();
                 video.remove();
-                image.show();
                 closeButton.remove();
-                return false;
+                imgEl.style.display = null;
             });
-            return false;
+            return;
         }
 
-        if ($(imgEl).is('[expand]')) {
-            // Fix para imágenes muy altas
-            if ($(imgEl).height() >= $(window).height() && $(window).scrollTop() > $(imgEl).offset().top - 64) {
-                $(window).scrollLeft(0).scrollTop($(imgEl).offset().top - 64);
+        if (imgEl.dataset.expanded === 'true') {
+            if (imgEl.height >= window.innerHeight && imgEl.y < 64) {
+                window.scrollBy(0, imgEl.y - 64);
             }
-            $(imgEl).prop('src', $(imgEl).data('thumbUrl'));
-            $(imgEl).removeAttr('expand');
-            $(imgEl).removeAttr('style');
+            imgEl.src = imgEl.dataset.thumbUrl;
+            delete imgEl.dataset.expanded;
+            delete imgEl.dataset.thumbUrl;
+            imgEl.style.maxWidth = null;
+            imgEl.style.maxHeight = null;
         } else {
-            $(imgEl).data('thumbUrl', $(imgEl).prop('src'));
-            $(imgEl).prop('src', expandUrl);
-            $(imgEl).attr('expand', '');
-            $(imgEl).css({
-                'max-width': '98%',
-                'max-height': '100%',
-            });
+            imgEl.dataset.thumbUrl = imgEl.src;
+            imgEl.src = expandUrl;
+            imgEl.dataset.expanded = true;
+            imgEl.style.maxWidth = '98%';
+            imgEl.style.maxHeight = '100%';
         }
-
-        return false;
     }
 
-    setEvents($) {
-        const that = this;
-
-        // Expandir imágenes
-        $('img.thumb').click(ev => that.expandThumb(ev.currentTarget));
+    setEvents() {
+        const elements = document.querySelectorAll('img.thumb');
+        elements.forEach((element) => {
+            element.addEventListener('click', this.expandThumb);
+        });
     }
 }

@@ -17,8 +17,12 @@ export class Settings {
     loadStyles() {
         const styleLink = document.getElementById('mainStyle');
         styleLink.href = '/stylesheets/' +  this.data.style + '.css';
+
         if (this.data.useCustomCSS) {
-            $('<style id="customStyle"></style>').text(this.data.customCSS).appendTo('body');
+            const element = document.createElement('style');
+            element.id = 'customStyle';
+            element.innerText = this.data.customCSS;
+            document.body.appendChild(element);
         }
     }
 
@@ -26,9 +30,15 @@ export class Settings {
         this.data = this.app.data.settings;
         const styleLink = document.getElementById('mainStyle');
         styleLink.href = '/stylesheets/' + this.data.style + '.css';
-        $('#customStyle').remove();
+        const customStyle = document.getElementById('customStyle');
+        if (customStyle !== null) {
+            customStyle.remove();
+        }
         if (this.data.useCustomCSS) {
-            $('<style id="customStyle"></style>').text(this.data.customCSS).appendTo('body');
+            const element = document.createElement('style');
+            element.id = 'customStyle';
+            element.innerText = this.data.customCSS;
+            document.body.appendChild(element);
         }
     }
 
