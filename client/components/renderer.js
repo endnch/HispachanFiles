@@ -23,12 +23,23 @@ export default function renderPostMessage(text, postId) {
     // Reflinks
     text = text.replace(/>>([r]?[l]?[f]?[q]?[0-9,\-,,]+)/g, ref => {
         const rP = ref.substr(2);
-        if ($('[name="' + rP + '"]').length) {
+        const post = document.getElementsByName(rP)[0];
+        if (post !== undefined) {
             // Backlinks
-            const backlinks = $(`a[name="${rP}"]`).parent().find('blockquote .replybacklinks').first();
-            if (!backlinks.find(`a.backlink[href="#${postId}"]`).length) {
-                backlinks.append(`<a class="backlink" href="#${postId}">>>${postId}</a>
-                         <div class="ui flowing popup"><i class="notched circle loading icon"></i></div>`);
+            const backlinks = post.parentElement.querySelector('blockquote .replybacklinks');
+            const refToPost = backlinks.querySelector(`a.backlink[href="#${postId}"]`);
+            if (refToPost === null) {
+                const i = document.createElement('i');
+                i.classList.add('notched', 'circle', 'loading', 'icon');
+                const div = document.createElement('div');
+                div.classList.add('ui', 'flowing', 'popup');
+                const a = document.createElement('a');
+                a.classList.add('backlink');
+                a.href = `#${postId}`;
+                a.innerText = `>>>${postId}`;
+                div.appendChild(i);
+                backlinks.appendChild(a);
+                backlinks.appendChild(div);
             }
             return `<a class="backlink" href="#${rP}" data-ref="${rP}">${ref}</a><div class="ui flowing popup"><i class="notched circle loading icon"></i></div>`;
         } else {

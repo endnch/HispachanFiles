@@ -24,26 +24,38 @@ class HispachanFiles {
 
     // Eventos básicos
     assignEvents() {
-        const that = this;
-        // Clásico
-        $(document).ready(() => { that.documentReady() });
-        $(window).load(() => { that.documentLoaded() });
+        window.addEventListener('load', () => {
+            this.documentLoaded();
+        });
+
+        if (document.readyState === 'complete') {
+            this.documentReady();
+        } else {
+            document.addEventListener('readystatechange', (event) => {
+                if (event.target.readyState === 'complete') {
+                    this.documentReady();
+                }
+            });
+        }
     }
 
     documentReady() {
         const that = this;
-        $('#sideToggle').click(() => {
+        document.getElementById('sideToggle').addEventListener('click', (event) => {
+            event.preventDefault();
             $('#mainSb').sidebar('toggle');
-            return false;
         });
 
         $('#mainTabs .item').tab();
 
-        $('#saveBtn').click(() => {
-            if (that.data.archiver.working) return;
-            const archiver = new Archiver(that.data.archiver.url, that);
-            archiver.start();
-        });
+        const saveBtn = document.getElementById('saveBtn');
+        if (saveBtn !== null) {
+            saveBtn.addEventListener('click', () => {
+                if (that.data.archiver.working) return;
+                const archiver = new Archiver(that.data.archiver.url, that);
+                archiver.start();
+            });
+        }
 
         $('#threadSearch').search({
             apiSettings: {
@@ -52,23 +64,26 @@ class HispachanFiles {
             type: 'standard',
         });
 
-        $('#settingsBtn').click(() => that.settings.showModal());
+        document.getElementById('settingsBtn').addEventListener('click', () => that.settings.showModal());
 
-        $(document.body).on('click', '#copyBtn', () => {
-            if (document.queryCommandSupported('copy')) {
-                $('#copyBox').select();
-                document.execCommand('copy');
-            } else {
-                prompt('Tu navegador no soporta el copiado. Pulsa Ctrl+C para copiar manualmente.', $('#copyBox').val());
+        document.body.addEventListener('click', (event) => {
+            if (event.srcElement.id === 'copyBtn') {
+                const copyBox = document.getElementById('copyBox');
+                if (document.queryCommandSupported('copy')) {
+                    copyBox.select();
+                    document.execCommand('copy');
+                } else {
+                    prompt('Tu navegador no soporta el copiado. Pulsa Ctrl+C para copiar manualmente.', copyBox.value);
+                }
             }
         });
 
         // Estamos en un Hilo
-        if ($('#hispaBox').length) {
-            const hB = $('#hispaBox');
-            const th = new Thread(hB.prop('hf-board'), hB.prop('hf-id'));
+        if (document.getElementById('hispaBox') !== null) {
+            const hB = document.getElementById('hispaBox');
+            const th = new Thread(hB.getAttribute('hf-board'), hB.getAttribute('hf-id'));
             this.threadControl = th;
-            th.setEvents($);
+            th.setEvents();
         }
 
         // Uso Vue para el parseado
@@ -92,7 +107,7 @@ class HispachanFiles {
             lastResort: 'bottom left',
             position: 'bottom left',
             onVisible: function() {
-                this.html($(`#reply${this.prev().attr('href').substr(1)}`).html());
+                this.html(document.getElementById(`reply${this.prev().attr('href').substr(1)}`).innerHTML);
                 this.find(`a[name=${this.prev().attr('href').substr(1)}]`).attr('name', '');
                 if (this.find('video').length > 0) {
                     // Si el video está dentro de otro popup, no lo reproduzcas
@@ -106,10 +121,18 @@ class HispachanFiles {
                 }
             },
         });
-        $('.backlink').click(function() {
-            $('.reply').removeClass('highlight');
-            $(`#reply${$(this).attr('href').substr(1)}`).addClass('highlight');
-        });
+        const backlinks = document.getElementsByClassName('backlink');
+        for (const backlink of backlinks) {
+            backlink.addEventListener('click', (event) => {
+                const target = event.currentTarget;
+                const replies = document.getElementsByClassName('reply');
+                for (const reply of replies) {
+                    reply.classList.remove('highlight');
+                }
+                document.getElementById(`reply${target.href.split('#')[1]}`)
+                    .classList.add('highlight');
+            });
+        }
         $('.ui.dropdown').dropdown();
     }
 }
