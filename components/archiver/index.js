@@ -6,7 +6,7 @@
 'use strict';
 
 const mkdirp   = require('mkdirp');
-const fs       = require('fs');
+const fs       = require('fs/promises');
 const md5      = require('md5');
 const axios    = require('axios');
 
@@ -90,39 +90,37 @@ class Archiver {
     // Guardar archivos adjuntos de un post
     async storeAttachment(post) {
         // Crear Directorios para archivos, si no existen
-        mkdirp.sync(this.current.fileDir);
-        mkdirp.sync(this.current.thumbDir);
+        await mkdirp(this.current.fileDir);
+        await mkdirp(this.current.thumbDir);
 
         // Almacenar thumb
         // Ubicación final de la thumb
         const thumbPath = this.current.thumbDir + post.file.thumb.split('/').reverse()[0];
 
-        if (!fs.existsSync(thumbPath)) {
+        try {
+            await fs.access(thumbPath);
+        } catch (e) {
             // Descargar thumb
             try {
-                const response = await axios.get(post.file.thumb, { responseType: 'stream' });
-
-                await new Promise((resolve, reject) => {
-                    response.data.pipe(fs.createWriteStream(thumbPath))
-                        .on('error', error => { reject(error) })
-                        .on('finish', () => { resolve() });
-                });
+                const response = await axios.get(
+                    post.file.thumb,
+                    { responseType: 'arraybuffer' },
+                );
+                await fs.writeFile(thumbPath, response.data);
             } catch (error) {
                 if (!(error.response && error.response.status === 404)) {
                     throw new Error(error);
                 }
-
                 // Esto es un hack
                 // Hace falta hacer el parseado de hilos con un headless browser
-                const response = await axios.get('https://www.hispachan.org/buttons/previewerror.png', { responseType: 'stream' });
-
-                await new Promise((resolve, reject) => {
-                    response.data.pipe(fs.createWriteStream(thumbPath))
-                        .on('error', error => { reject(error) })
-                        .on('finish', () => { resolve() });
-                });
+                const response = await axios.get(
+                    'https://www.hispachan.org/buttons/previewerror.png',
+                    { responseType: 'arraybuffer' },
+                );
+                await fs.writeFile(thumbPath, response.data);
             }
         }
+
         // Establecer nueva ubicación
         post.file.thumb = thumbPath;
 
@@ -130,16 +128,18 @@ class Archiver {
         // Ubicación final del archivo
         const filePath = this.current.fileDir + post.file.url.split('/').reverse()[0];
 
-        if (!fs.existsSync(filePath)) {
+        try {
+            await fs.access(filePath);
+        } catch (e) {
             // Descargar archivo
-            const response = await axios.get(encodeURI(post.file.url), { responseType: 'stream' });
-            await new Promise((resolve, reject) => {
-                response.data.pipe(fs.createWriteStream(filePath))
-                    .on('error', error => { reject(error) })
-                    .on('finish', () => { resolve() });
-            });
-            post.file.md5 = md5(fs.readFileSync(filePath));
+            const response = await axios.get(
+                encodeURI(post.file.url),
+                { responseType: 'arraybuffer' },
+            );
+            await fs.writeFile(filePath, response.data);
+            post.file.md5 = md5(response.data);
         }
+
         // Establecer nueva ubicación
         post.file.url = filePath;
 
