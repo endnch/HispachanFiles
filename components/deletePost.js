@@ -1,7 +1,6 @@
 'use strict';
 const Post = require('../models/post');
-const rimraf = require('rimraf');
-const fs = require('fs');
+const fs = require('fs/promises');
 
 /**
  * Elimina un post de la base de datos y todos los archivos relacionados
@@ -10,48 +9,32 @@ const fs = require('fs');
  * @param {Object} thread - El post a eliminar
  * @returns {Promise} Promsesa del resultado
  */
-const deletePost = post => {
-    return new Promise((resolve, reject) => {
-        if (post.thread) {
-            // Es un post
-            // Eliminar post y retornar
-            Post.findOneAndRemove({ postId: post.postId, board: post.board }, e => {
-                if (e) {
-                    reject(e);
-                    return;
-                }
-                if (!post.file) {
-                    resolve();
-                    return;
-                }
-                fs.unlinkSync(post.file.url);
-                fs.unlinkSync(post.file.thumb);
-                resolve();
-            });
-            return;
+
+const deletePost = async post => {
+    if (post.thread) {
+        // Es un post
+        // Eliminar post y retornar
+
+        // Eliminar post
+        await Post.findOneAndRemove({ postId: post.postId, board: post.board });
+        // Eliminar post de arreglo replies
+        await Post.updateOne({ _id: post.thread._id }, { $pull: { replies: post._id } });
+
+        // Eliminar archivos
+        if (post.file) {
+            await fs.unlink(post.file.url);
+            await fs.unlink(post.file.thumb);
         }
 
-        // Es un hilo
-        // Eliminar todas las respuestas
-        Promise.all(post.replies.map(reply => deletePost(reply)))
-            .then(() => {
-                // Eliminar OP
-                Post.findOneAndRemove({ postId: post.postId, board: post.board }, e => {
-                    if (e) {
-                        reject(e);
-                        return;
-                    }
-                    rimraf(`data/${post.board}/${post.postId}`, e => {
-                        if (e) {
-                            reject(e);
-                            return;
-                        }
-                        resolve();
-                    });
-                });
-            })
-            .catch(reject);
-    });
+        return;
+    }
+    // Es un hilo
+    // Eliminar todas las respuestas
+    await Promise.all(post.replies.map(reply => deletePost(reply)));
+    // Eliminar OP
+    await Post.findOneAndRemove({ postId: post.postId, board: post.board });
+    // Eliminar carpeta
+    await fs.rmdir(`data/${post.board}/${post.postId}`, { recursive: true });
 };
 
 module.exports = deletePost;
