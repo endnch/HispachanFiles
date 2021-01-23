@@ -41,7 +41,7 @@ router.get('/ui-search', async (req, res) => {
         });
 
         if (num > 4) {
-            response.action = { url: `/search?q=${encodeURIComponent(q)}`, text: `Ver todos los resultados (${num})` };
+            response.action = { url: `/search?op=true&q=${encodeURIComponent(q)}`, text: `Ver todos los resultados (${num})` };
         }
 
         res.json(response);
