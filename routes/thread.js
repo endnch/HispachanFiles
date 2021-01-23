@@ -37,7 +37,7 @@ router.get('/:board/res/:postId', async (req, res, next) => {
 });
 
 // Eliminar posts
-router.all('/:board/del/:postId', async (req, res) => {
+router.delete('/:board/res/:postId', async (req, res) => {
     res.setHeader('content-type', 'text/html; charset=utf-8');
 
     if (!publicSettings.features.threadDeletion) {
@@ -45,7 +45,7 @@ router.all('/:board/del/:postId', async (req, res) => {
         return;
     }
 
-    const key = req.body.key || req.query.key;
+    const key = req.body.key;
     const postId = req.params.postId.split('.')[0];
     const board = req.params.board;
 
