@@ -22,6 +22,15 @@ block content
     br
     hr
     .replymode Archivado por última vez {{ '#{thread.lastUpdate.toISOString()}' | moment 'DD/MM/YY HH:mm'}} (Hora Local).
+    div(class='ui icon message') 
+      div(class='content')
+        center: div(class='header')
+          | Descargar archivos ({{ #{(thread.replies.filter(reply => reply.file.url)).length + 1} }})
+          i.icon.download.link#downloadBtn(v-bind:class='downloader.working ? [] : ["inverted", "circular"]', style='margin-left: 0.5em;')
+    div(v-cloak, v-show='downloader.started')
+      .ui.active.progress#downloadProgress
+        .bar: .progress
+        .label
     hr
     div(id='thread'+thread.postId+thread.board)
       - var post = thread

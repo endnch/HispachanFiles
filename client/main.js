@@ -6,13 +6,18 @@ import jQuery from 'jquery';
 import NProgress from 'nprogress';
 import Vue from 'vue';
 import { Archiver, archiverState } from './components/archiver';
+import { Downloader, downloaderState } from './components/downloader';
 import { Settings, defaultSettings } from './components/settings';
 import renderPostMessage from './components/renderer';
 import Thread from './components/thread';
 
 class HispachanFiles {
     constructor() {
-        this.data = { archiver: archiverState, settings: defaultSettings };
+        this.data = { 
+            archiver: archiverState,
+            downloader: downloaderState,
+            settings: defaultSettings
+        };
         // Mostrar barra de carga inicial
         NProgress.start();
         // Si no coloco jQuery en una variable global, la perra de semantic-ui deja de funcionar
@@ -84,6 +89,16 @@ class HispachanFiles {
             const th = new Thread(hB.getAttribute('hf-board'), hB.getAttribute('hf-id'));
             this.threadControl = th;
             th.setEvents();
+
+            // Evento para la descarga de un hilo
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn != null) {
+                downloadBtn.addEventListener('click', () => {
+                    if (that.data.downloader.working) return;
+                    const downloader = new Downloader(that);
+                    downloader.start();
+                });
+            }
         }
 
         // Uso Vue para el parseado
