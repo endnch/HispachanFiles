@@ -50,7 +50,7 @@ Esta nueva versión de HispaFiles está hecha completamente desde cero, así que
  - [x] Añadir "backlinks" a las respuestas
  - [x] Añadir preview de refs
  - [x] Añadir los demás estilos (a parte de Hispachan)
- - [ ] Añadir la opción de descarga en zip
+ - [x] Añadir la opción de descarga en zip
  - [x] Añadir una página dedicada a los resultados de búsqueda
  - [ ] Añadir estadísticas publicas en la página principal (número de hilos guardados, espacio usado, etc)
  - [ ] Mejorar la búsqueda de hilos
