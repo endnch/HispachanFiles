@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
+    "build": "gulp build",
     "debug": "nodemon --exec node --inspect ./bin/www",
     "test": "jest --verbose --runInBand"
   },

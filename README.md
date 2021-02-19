@@ -30,14 +30,9 @@ Listo, ahora tienes tu propio HispaFiles de uso personal <s>para guardar tus cep
 
 ### Modificando el código
 
-También se puede usar Gulp para actualizar cambios en el código fácilmente. Para instalarlo se deben ejecutar los siguientes comandos:
+Después de modificar algo en el código cliente, se debe ejecutar lo siguiente en la carpeta raíz de HispachanFiles:
 ```
-npm install gulp-cli -g
-npm install gulp -D
-```
-Después de modificar algo en el código se debe ejecutar lo siguiente en la carpeta raíz de HispachanFiles:
-```
-gulp build
+npm run build
 ```
 
 ## Cosas por hacer
