@@ -78,6 +78,7 @@ module.exports = {
 
     /* Remove Files in Clean */
     del: {
+      force: true,
       silent : true
     },
 
