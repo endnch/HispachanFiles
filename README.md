@@ -12,13 +12,18 @@ Este es el primer proyecto de gran escala que hago en Node, así que si hay algo
 - Instala [Node.js](https://nodejs.org/es/download/) y [Mongo](https://www.mongodb.com/try/download/community)
 - Descarga / Clona el repositorio:
 ```
-git clone --recursive https://github.com/endnch/HispachanFiles.git
+git clone https://github.com/endnch/HispachanFiles.git
 ```
 - Edita los archivos de configuración (`settings.js` y `server-settings.js`).
 - Abre una terminal en la carpeta del repositorio
 - Instala las dependencias:
 ```
 npm install
+```
+- Construye la aplicacion:
+```
+npm run build
+npm run gulp -- -f semantic/gulpfile.js build
 ```
 - Inicia el servidor:
 ```
@@ -33,6 +38,11 @@ Listo, ahora tienes tu propio HispaFiles de uso personal <s>para guardar tus cep
 Después de modificar algo en el código cliente, se debe ejecutar lo siguiente en la carpeta raíz de HispachanFiles:
 ```
 npm run build
+```
+
+Si se modifica algo en el codigo de semantic, se debe ejecutar lo siguiente en la carpeta raíz de HispachanFiles:
+```
+npm run gulp -- -f semantic/gulpfile.js build
 ```
 
 ## Cosas por hacer
