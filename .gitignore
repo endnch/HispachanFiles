@@ -84,3 +84,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Semantic compiled files
+public/semantic/
