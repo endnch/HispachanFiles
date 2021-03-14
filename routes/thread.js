@@ -9,7 +9,7 @@ const deletePost = require('../components/deletePost');
 
 router.get('/:board/res/:postId', async (req, res, next) => {
     // CloudFlare server push
-    res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
+    res.set('Link', '</dist/app.min.js>; rel=preload, </fomantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </fomantic/semantic.js>; rel=prefetch');
 
     const postId = req.params.postId.split('.')[0];
     const board = req.params.board;

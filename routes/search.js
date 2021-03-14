@@ -54,7 +54,7 @@ router.get('/ui-search', async (req, res) => {
 // Búsqueda avanzada
 router.get('/search', async (req, res) => {
     // CloudFlare server push
-    res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
+    res.set('Link', '</dist/app.min.js>; rel=preload, </fomantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </fomantic/semantic.js>; rel=prefetch');
 
     const q = req.query.q;
     const p = parseInt(req.query.p) || 1;
@@ -120,7 +120,7 @@ router.get('/search', async (req, res) => {
 
 router.get('/:board', async (req, res, next) => {
     // CloudFlare server push
-    res.set('Link', '</dist/app.min.js>; rel=preload, </semantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </semantic/semantic.js>; rel=prefetch');
+    res.set('Link', '</dist/app.min.js>; rel=preload, </fomantic/semantic.min.css>; rel=prefetch, </stylesheets/css/nprogress.css>; rel=prefetch, </fomantic/semantic.js>; rel=prefetch');
 
     const board = req.params.board;
 
