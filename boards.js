@@ -18,6 +18,10 @@ const boards = [
             title: 'Ciencia',
         },
         {
+            board: 'e',
+            title: 'Religión y Espiritualidad',
+        },
+        {
             board: 'f',
             title: 'Ejercicio, Salud y Estilo',
         },
@@ -51,7 +55,7 @@ const boards = [
         },
         {
             board: 'z',
-            title: 'Fotografía y Edición',
+            title: 'Hágalo usted mismo',
         },
     ],
     [
