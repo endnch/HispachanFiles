@@ -4,7 +4,8 @@
     a(href='https://www.'+settings.target+'.org/') #{settings.target}.org
     |.
     br
-    a(href='mailto:'+ settings.misc.email) Contacto
+    | Contacto: 
+    a(href='mailto:'+ settings.misc.email) #{settings.misc.email}
     | &nbsp;/&nbsp;
     a(href='https://github.com/endnch/HispachanFiles') GitHub
     if settings.features.apiEnabled
