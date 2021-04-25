@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
+    "gulp": "gulp",
     "build": "gulp build",
     "debug": "nodemon --exec node --inspect ./bin/www",
     "test": "jest --verbose --runInBand"
@@ -22,6 +23,7 @@
     "express": "^4.17.1",
     "feed": "^4.2.1",
     "file-saver": "^2.0.5",
+    "fomantic-ui": "^2.8.7",
     "jquery": "^2.2.4",
     "jszip": "^3.6.0",
     "lodash.clonedeep": "^4.5.0",

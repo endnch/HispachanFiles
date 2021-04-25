@@ -1,0 +1,4 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+@inputVerticalPadding: 0;
