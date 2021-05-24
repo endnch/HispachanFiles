@@ -43,7 +43,11 @@ const boards = [
         },
         {
             board: 'pol',
-            title: 'Política',
+            title: 'Gaceta Política',
+        },
+        {
+            board: 'pl',
+            title: 'Plaza',
         },
         {
             board: 'q',
@@ -55,7 +59,7 @@ const boards = [
         },
         {
             board: 'z',
-            title: 'Hágalo usted mismo',
+            title: 'HispaPreguntas',
         },
     ],
     [
@@ -64,12 +68,12 @@ const boards = [
             title: 'Anime y Manga',
         },
         {
-            board: 'b',
-            title: 'Balcón',
-        },
-        {
             board: 'ac',
             title: 'Animación y Cómics',
+        },
+        {
+            board: 'b',
+            title: 'Balcón',
         },
         {
             board: 'ch',
