@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const sass = require('node-sass-middleware');
 const mongoose = require('mongoose');
 const Sentry = require('@sentry/node');
+const winston = require('winston');
 
 const routes = require('./routes/index');
 const apiRoutes = require('./routes/api');
@@ -48,6 +49,17 @@ if (serverSettings.sentry.enabled) {
     // transaction/span/breadcrumb is attached to its own Hub instance
     app.use(Sentry.Handlers.requestHandler());
 }
+
+// Winston
+winston.configure({
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json(),
+    ),
+    transports: [
+        new winston.transports.File({ filename: './logs/logs.log' }),
+    ],
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

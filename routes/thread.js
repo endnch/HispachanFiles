@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const winston = require('winston');
 const router = express.Router();
 const publicSettings = require('../settings');
 const serverSettings = require('../server-settings');
@@ -40,6 +41,15 @@ router.get('/:board/res/:postId', async (req, res, next) => {
 router.delete('/:board/res/:postId', async (req, res) => {
     res.setHeader('content-type', 'text/html; charset=utf-8');
 
+    winston.info(
+        'Eliminando hilo.',
+        {
+            path: req.path,
+            ip: req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'],
+            key: req.body.key,
+        },
+    );
+
     if (!publicSettings.features.threadDeletion) {
         res.end('Función desactivada');
         return;
@@ -68,6 +78,14 @@ router.delete('/:board/res/:postId', async (req, res) => {
         res.end('Error.');
         return;
     }
+
+    winston.info(
+        'Hilo eliminado.',
+        {
+            path: req.path,
+            ip: req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'],
+        },
+    );
 
     res.end('Post eliminado.');
 });

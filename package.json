@@ -38,7 +38,8 @@
     "socket.io-client": "^3.0.2",
     "url-parse": "^1.4.7",
     "vue": "^1.0.28",
-    "vue-moment": "^4.1.0"
+    "vue-moment": "^4.1.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
